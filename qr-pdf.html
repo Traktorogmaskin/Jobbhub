@@ -18,7 +18,7 @@
     }
 
     .page {
-      max-width: 1440px;
+      max-width: 1460px;
       margin: 0 auto;
     }
 
@@ -70,15 +70,15 @@
       margin-bottom: 14px;
     }
 
-    .field label {
+    .field label,
+    .section-label {
       display: block;
       font-weight: bold;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
       font-size: 14px;
     }
 
     .field input,
-    .field select,
     .field button {
       width: 100%;
       box-sizing: border-box;
@@ -87,8 +87,7 @@
 
     .field input[type="text"],
     .field input[type="number"],
-    .field input[type="file"],
-    .field select {
+    .field input[type="file"] {
       border: 1px solid #cbd5e1;
       border-radius: 10px;
       padding: 10px 12px;
@@ -176,10 +175,27 @@
       background: #d1d5db;
     }
 
-    .placement-grid {
+    .active-choice {
+      background: #dbeafe;
+      color: #1d4ed8;
+      outline: 2px solid #93c5fd;
+    }
+
+    .choice-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
       gap: 10px;
+    }
+
+    .choice-grid.two {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .choice-grid.five {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .choice-grid.five .center-span {
+      grid-column: 1 / span 2;
     }
 
     .hint {
@@ -241,6 +257,7 @@
     }
 
     .qr-content {
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: flex-start;
@@ -292,7 +309,7 @@
     <div class="topbar">
       <a class="back-link" href="https://traktorogmaskin.github.io/Jobbhub/">← Tilbake til Jobbhub</a>
       <h1 class="title">QR-editor for PDF</h1>
-      <p class="subtitle">Start midt på, dra QR-en dit du vil, og lagre når det ser riktig ut.</p>
+      <p class="subtitle">Dra QR-en dit du vil, bruk hurtigknapper for plassering, og lagre når det ser riktig ut.</p>
     </div>
 
     <div class="layout">
@@ -315,24 +332,25 @@
         </div>
 
         <div class="field">
-          <label for="textLayout">Tekstplassering</label>
-          <select id="textLayout">
-            <option value="right" selected>Til høyre for QR</option>
-            <option value="left">Til venstre for QR</option>
-            <option value="bottom">Under QR</option>
-            <option value="hidden">Ingen tekst</option>
-          </select>
+          <div class="section-label">QR-plassering</div>
+          <div class="choice-grid five">
+            <button class="btn btn-secondary qr-place-btn" type="button" data-place="top-left">Oppe til venstre</button>
+            <button class="btn btn-secondary qr-place-btn" type="button" data-place="top-right">Oppe til høyre</button>
+            <button class="btn btn-secondary qr-place-btn center-span" type="button" data-place="center">Midt på</button>
+            <button class="btn btn-secondary qr-place-btn" type="button" data-place="bottom-left">Nede til venstre</button>
+            <button class="btn btn-secondary qr-place-btn" type="button" data-place="bottom-right">Nede til høyre</button>
+          </div>
         </div>
 
         <div class="field">
-          <label for="placementMode">Plassering</label>
-          <select id="placementMode">
-            <option value="manual" selected>Manuell</option>
-            <option value="center">Midt på</option>
-            <option value="bottom-right">Nede til høyre</option>
-            <option value="bottom-left">Nede til venstre</option>
-            <option value="top-right">Oppe til høyre</option>
-          </select>
+          <div class="section-label">Tekstplassering</div>
+          <div class="choice-grid two">
+            <button class="btn btn-secondary text-layout-btn" type="button" data-layout="top">Over QR</button>
+            <button class="btn btn-secondary text-layout-btn" type="button" data-layout="bottom">Under QR</button>
+            <button class="btn btn-secondary text-layout-btn" type="button" data-layout="left">Til venstre for QR</button>
+            <button class="btn btn-secondary text-layout-btn" type="button" data-layout="right">Til høyre for QR</button>
+            <button class="btn btn-secondary text-layout-btn center-span" type="button" data-layout="hidden">Ingen tekst</button>
+          </div>
         </div>
 
         <div class="row">
@@ -350,12 +368,12 @@
         <div class="row">
           <div class="field">
             <label for="labelSize">Tekststørrelse</label>
-            <input class="range-input" type="range" id="labelSize" min="3" max="18" step="1" value="10" />
+            <input class="range-input" type="range" id="labelSize" min="7" max="28" step="1" value="10" />
           </div>
 
           <div class="field">
             <label for="labelSizeValue">Tekststørrelse</label>
-            <input type="number" id="labelSizeValue" min="3" max="18" step="1" value="10" />
+            <input type="number" id="labelSizeValue" min="7" max="28" step="1" value="10" />
           </div>
         </div>
 
@@ -372,31 +390,10 @@
         </div>
 
         <div class="field">
-          <label for="applyMode">Legg på</label>
-          <select id="applyMode">
-            <option value="first">Kun første side</option>
-            <option value="all">Alle sider</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label>Plassering</label>
-          <div class="placement-grid">
-            <button class="btn btn-secondary" type="button" id="placeCenter">Midt på</button>
-            <button class="btn btn-secondary" type="button" id="placeBottomRight">Nede til høyre</button>
-            <button class="btn btn-secondary" type="button" id="placeBottomLeft">Nede til venstre</button>
-            <button class="btn btn-secondary" type="button" id="placeTopRight">Oppe til høyre</button>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="field">
-            <label for="posX">X-posisjon</label>
-            <input type="number" id="posX" step="1" value="0" />
-          </div>
-          <div class="field">
-            <label for="posY">Y-posisjon</label>
-            <input type="number" id="posY" step="1" value="0" />
+          <div class="section-label">Legg QR på</div>
+          <div class="choice-grid two">
+            <button class="btn btn-secondary apply-mode-btn active-choice" type="button" data-apply="first">Kun første side</button>
+            <button class="btn btn-secondary apply-mode-btn" type="button" data-apply="all">Alle sider</button>
           </div>
         </div>
 
@@ -405,7 +402,7 @@
         </div>
 
         <div class="hint">
-          Standard er midt på. Dra QR-en med musen til ønsket plassering. Teksten holdes alltid utenfor QR-en.
+          Hurtigknapper flytter QR-en grovt. Deretter kan du dra den med musen for finjustering. Tekst over/under/venstre/høyre er egne hurtigvalg.
         </div>
 
         <div class="status" id="status"></div>
@@ -455,7 +452,9 @@
       dragOffsetY: 0,
       overlayX: 0,
       overlayY: 0,
-      placementMode: "manual",
+      qrPlacement: "center",
+      textLayout: "right",
+      applyMode: "first",
       hasManualPosition: false
     };
 
@@ -463,17 +462,12 @@
       pdfFile: document.getElementById("pdfFile"),
       qrUrl: document.getElementById("qrUrl"),
       qrText: document.getElementById("qrText"),
-      textLayout: document.getElementById("textLayout"),
-      placementMode: document.getElementById("placementMode"),
       qrSize: document.getElementById("qrSize"),
       qrSizeValue: document.getElementById("qrSizeValue"),
       labelSize: document.getElementById("labelSize"),
       labelSizeValue: document.getElementById("labelSizeValue"),
       labelGap: document.getElementById("labelGap"),
       labelGapValue: document.getElementById("labelGapValue"),
-      applyMode: document.getElementById("applyMode"),
-      posX: document.getElementById("posX"),
-      posY: document.getElementById("posY"),
       saveBtn: document.getElementById("saveBtn"),
       status: document.getElementById("status"),
       previewMeta: document.getElementById("previewMeta"),
@@ -485,29 +479,20 @@
       qrBox: document.getElementById("qrBox"),
       qrCanvas: document.getElementById("qrCanvas"),
       qrLabel: document.getElementById("qrLabel"),
-      placeCenter: document.getElementById("placeCenter"),
-      placeBottomRight: document.getElementById("placeBottomRight"),
-      placeBottomLeft: document.getElementById("placeBottomLeft"),
-      placeTopRight: document.getElementById("placeTopRight")
+      qrPlaceButtons: Array.from(document.querySelectorAll(".qr-place-btn")),
+      textLayoutButtons: Array.from(document.querySelectorAll(".text-layout-btn")),
+      applyModeButtons: Array.from(document.querySelectorAll(".apply-mode-btn"))
     };
 
     bindEvents();
     syncInputs();
+    updateButtonStates();
     refreshQrPreview();
 
     function bindEvents() {
       elements.pdfFile.addEventListener("change", handlePdfFile);
       elements.qrUrl.addEventListener("input", refreshQrPreview);
       elements.qrText.addEventListener("input", refreshQrPreview);
-      elements.textLayout.addEventListener("change", refreshQrPreview);
-
-      elements.placementMode.addEventListener("change", () => {
-        state.placementMode = elements.placementMode.value;
-        if (state.placementMode !== "manual") {
-          state.hasManualPosition = false;
-          applyPlacementMode();
-        }
-      });
 
       elements.qrSize.addEventListener("input", () => {
         elements.qrSizeValue.value = elements.qrSize.value;
@@ -527,7 +512,7 @@
       });
 
       elements.labelSizeValue.addEventListener("input", () => {
-        const value = clamp(Number(elements.labelSizeValue.value), 3, 18);
+        const value = clamp(Number(elements.labelSizeValue.value), 7, 28);
         elements.labelSize.value = String(value);
         elements.labelSizeValue.value = String(value);
         refreshQrPreview();
@@ -545,26 +530,29 @@
         refreshQrPreview();
       });
 
-      elements.posX.addEventListener("input", () => {
-        state.placementMode = "manual";
-        state.hasManualPosition = true;
-        elements.placementMode.value = "manual";
-        state.overlayX = clamp(Number(elements.posX.value), 0, getMaxOverlayX());
-        updateOverlayPosition();
-      });
+      for (const button of elements.qrPlaceButtons) {
+        button.addEventListener("click", () => {
+          state.qrPlacement = button.dataset.place;
+          state.hasManualPosition = false;
+          updateButtonStates();
+          applyQrPlacement();
+        });
+      }
 
-      elements.posY.addEventListener("input", () => {
-        state.placementMode = "manual";
-        state.hasManualPosition = true;
-        elements.placementMode.value = "manual";
-        state.overlayY = clamp(Number(elements.posY.value), 0, getMaxOverlayY());
-        updateOverlayPosition();
-      });
+      for (const button of elements.textLayoutButtons) {
+        button.addEventListener("click", () => {
+          state.textLayout = button.dataset.layout;
+          updateButtonStates();
+          refreshQrPreview();
+        });
+      }
 
-      elements.placeCenter.addEventListener("click", () => setPlacementMode("center"));
-      elements.placeBottomRight.addEventListener("click", () => setPlacementMode("bottom-right"));
-      elements.placeBottomLeft.addEventListener("click", () => setPlacementMode("bottom-left"));
-      elements.placeTopRight.addEventListener("click", () => setPlacementMode("top-right"));
+      for (const button of elements.applyModeButtons) {
+        button.addEventListener("click", () => {
+          state.applyMode = button.dataset.apply;
+          updateButtonStates();
+        });
+      }
 
       elements.qrOverlay.addEventListener("mousedown", startDrag);
       document.addEventListener("mousemove", onDrag);
@@ -577,6 +565,20 @@
       elements.qrSizeValue.value = elements.qrSize.value;
       elements.labelSizeValue.value = elements.labelSize.value;
       elements.labelGapValue.value = elements.labelGap.value;
+    }
+
+    function updateButtonStates() {
+      for (const button of elements.qrPlaceButtons) {
+        button.classList.toggle("active-choice", button.dataset.place === state.qrPlacement);
+      }
+
+      for (const button of elements.textLayoutButtons) {
+        button.classList.toggle("active-choice", button.dataset.layout === state.textLayout);
+      }
+
+      for (const button of elements.applyModeButtons) {
+        button.classList.toggle("active-choice", button.dataset.apply === state.applyMode);
+      }
     }
 
     function setStatus(message) {
@@ -592,7 +594,7 @@
     }
 
     function getLabelSize() {
-      return clamp(Number(elements.labelSize.value), 3, 18);
+      return clamp(Number(elements.labelSize.value), 7, 28);
     }
 
     function getLabelGap() {
@@ -600,7 +602,7 @@
     }
 
     function isLabelVisible() {
-      return elements.textLayout.value !== "hidden" && elements.qrText.value.trim() !== "";
+      return state.textLayout !== "hidden" && elements.qrText.value.trim() !== "";
     }
 
     function measureTextWidth(text, fontSize) {
@@ -617,9 +619,11 @@
 
       const text = elements.qrText.value.trim();
       const fontSize = getLabelSize();
+      const qrSize = getQrSize();
+
       return {
-        width: Math.max(40, measureTextWidth(text, fontSize) + 14),
-        height: fontSize + 14
+        width: Math.max(Math.min(qrSize, measureTextWidth(text, fontSize) + 18), 44),
+        height: fontSize + 16
       };
     }
 
@@ -628,7 +632,7 @@
       const label = getLabelMetrics();
       const gap = getLabelGap();
       const safeGap = Math.min(gap, qrSize * 1.5);
-      const layout = elements.textLayout.value;
+      const layout = state.textLayout;
       const padding = 12;
 
       if (!isLabelVisible()) {
@@ -704,13 +708,15 @@
         elements.qrOverlay.style.display = "flex";
         elements.previewMeta.textContent = `${file.name} • ${state.pageCount} side(r)`;
 
-        state.placementMode = "manual";
-        elements.placementMode.value = "manual";
+        state.qrPlacement = "center";
+        state.textLayout = "right";
+        state.applyMode = "first";
         state.hasManualPosition = false;
+        updateButtonStates();
 
         await refreshQrPreview();
-        applyCenterStart();
-        setStatus("PDF lastet. Start midt på og dra QR-koden dit du vil.");
+        applyQrPlacement();
+        setStatus("PDF lastet. Start med hurtigknapper, og dra deretter QR-en dit du vil.");
       } catch (error) {
         console.error(error);
         setStatus("Kunne ikke laste PDF.");
@@ -724,7 +730,7 @@
       const labelSize = getLabelSize();
       const gap = getLabelGap();
       const safeGap = Math.min(gap, qrSize * 1.5);
-      const layout = elements.textLayout.value;
+      const layout = state.textLayout;
       const label = getLabelMetrics();
 
       elements.qrCanvas.width = qrSize;
@@ -740,7 +746,11 @@
       elements.qrLabel.style.alignItems = "center";
       elements.qrLabel.style.justifyContent = "center";
 
-      if (layout === "bottom") {
+      if (layout === "top") {
+        elements.qrContent.style.flexDirection = "column-reverse";
+        elements.qrContent.style.gap = `${safeGap}px`;
+        elements.qrContent.style.alignItems = "center";
+      } else if (layout === "bottom") {
         elements.qrContent.style.flexDirection = "column";
         elements.qrContent.style.gap = `${safeGap}px`;
         elements.qrContent.style.alignItems = "center";
@@ -768,30 +778,18 @@
         ctx.clearRect(0, 0, qrSize, qrSize);
       }
 
-      if (state.placementMode !== "manual") {
-        applyPlacementMode();
+      if (!state.hasManualPosition && state.previewWidth && state.previewHeight) {
+        applyQrPlacement();
       } else if (state.hasManualPosition) {
         state.overlayX = clamp(state.overlayX, 0, getMaxOverlayX());
         state.overlayY = clamp(state.overlayY, 0, getMaxOverlayY());
         updateOverlayPosition();
-      } else if (state.previewWidth && state.previewHeight) {
-        applyCenterStart();
       }
-    }
-
-    function applyCenterStart() {
-      state.overlayX = (state.previewWidth - getOverlayWidth()) / 2;
-      state.overlayY = (state.previewHeight - getOverlayHeight()) / 2;
-      state.overlayX = clamp(state.overlayX, 0, getMaxOverlayX());
-      state.overlayY = clamp(state.overlayY, 0, getMaxOverlayY());
-      updateOverlayPosition();
     }
 
     function updateOverlayPosition() {
       elements.qrOverlay.style.left = `${state.overlayX}px`;
       elements.qrOverlay.style.top = `${state.overlayY}px`;
-      elements.posX.value = String(Math.round(state.overlayX));
-      elements.posY.value = String(Math.round(state.overlayY));
     }
 
     function startDrag(event) {
@@ -800,9 +798,7 @@
       }
 
       state.dragActive = true;
-      state.placementMode = "manual";
       state.hasManualPosition = true;
-      elements.placementMode.value = "manual";
 
       const rect = elements.qrOverlay.getBoundingClientRect();
       state.dragOffsetX = event.clientX - rect.left;
@@ -827,33 +823,30 @@
       state.dragActive = false;
     }
 
-    function setPlacementMode(mode) {
-      state.placementMode = mode;
-      state.hasManualPosition = false;
-      elements.placementMode.value = mode;
-      applyPlacementMode();
-    }
-
-    function applyPlacementMode() {
+    function applyQrPlacement() {
       if (!state.previewWidth || !state.previewHeight) {
         return;
       }
 
       const overlayWidth = getOverlayWidth();
       const overlayHeight = getOverlayHeight();
+      const margin = 20;
 
-      if (state.placementMode === "center") {
+      if (state.qrPlacement === "center") {
         state.overlayX = (state.previewWidth - overlayWidth) / 2;
         state.overlayY = (state.previewHeight - overlayHeight) / 2;
-      } else if (state.placementMode === "bottom-right") {
-        state.overlayX = state.previewWidth - overlayWidth - 20;
-        state.overlayY = state.previewHeight - overlayHeight - 20;
-      } else if (state.placementMode === "bottom-left") {
-        state.overlayX = 20;
-        state.overlayY = state.previewHeight - overlayHeight - 20;
-      } else if (state.placementMode === "top-right") {
-        state.overlayX = state.previewWidth - overlayWidth - 20;
-        state.overlayY = 20;
+      } else if (state.qrPlacement === "top-left") {
+        state.overlayX = margin;
+        state.overlayY = margin;
+      } else if (state.qrPlacement === "top-right") {
+        state.overlayX = state.previewWidth - overlayWidth - margin;
+        state.overlayY = margin;
+      } else if (state.qrPlacement === "bottom-left") {
+        state.overlayX = margin;
+        state.overlayY = state.previewHeight - overlayHeight - margin;
+      } else if (state.qrPlacement === "bottom-right") {
+        state.overlayX = state.previewWidth - overlayWidth - margin;
+        state.overlayY = state.previewHeight - overlayHeight - margin;
       }
 
       state.overlayX = clamp(state.overlayX, 0, getMaxOverlayX());
@@ -890,8 +883,8 @@
 
       const url = normalizeUrl(elements.qrUrl.value.trim());
       const text = elements.qrText.value.trim();
-      const layout = elements.textLayout.value;
-      const applyMode = elements.applyMode.value;
+      const layout = state.textLayout;
+      const applyMode = state.applyMode;
 
       if (!url) {
         alert("Skriv inn en gyldig lenke.");
@@ -915,7 +908,7 @@
         const safeGapPdf = (safeGapPx / state.previewWidth) * state.pdfPageWidth;
         const labelWidthPdf = (labelMetricsPx.width / state.previewWidth) * state.pdfPageWidth;
 
-        const qrDataUrl = await createQrPngDataUrl(url, Math.max(400, qrSizePx * 5));
+        const qrDataUrl = await createQrPngDataUrl(url, Math.max(500, qrSizePx * 6));
         const qrImage = await pdfDoc.embedPng(qrDataUrl);
 
         const targetPages = applyMode === "first"
@@ -947,6 +940,9 @@
             if (layout === "bottom") {
               textX = pdfX + Math.max(0, (qrSizePdf - textWidth) / 2);
               textY = Math.max(4, pdfQrY - labelSizePdf - safeGapPdf);
+            } else if (layout === "top") {
+              textX = pdfX + Math.max(0, (qrSizePdf - textWidth) / 2);
+              textY = Math.min(pageHeight - labelSizePdf - 4, pdfQrY + qrSizePdf + safeGapPdf);
             } else if (layout === "right") {
               textX = pdfX + qrSizePdf + safeGapPdf;
               textY = pdfQrY + (qrSizePdf / 2) - (labelSizePdf / 2);
