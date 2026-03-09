@@ -84,12 +84,63 @@
       font: inherit;
     }
 
-    .field input,
+    .field input[type="text"],
+    .field input[type="number"],
+    .field input[type="file"],
     .field select {
       border: 1px solid #cbd5e1;
       border-radius: 10px;
       padding: 10px 12px;
       background: #fff;
+    }
+
+    .range-input {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      background: #d1d5db;
+      outline: none;
+      padding: 0;
+      border: 0;
+      margin: 12px 0 0;
+    }
+
+    .range-input::-webkit-slider-runnable-track {
+      height: 8px;
+      border-radius: 999px;
+      background: #d1d5db;
+    }
+
+    .range-input::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #1d4ed8;
+      border: 0;
+      margin-top: -6px;
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+    }
+
+    .range-input::-moz-range-track {
+      height: 8px;
+      border-radius: 999px;
+      background: #d1d5db;
+      border: 0;
+    }
+
+    .range-input::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #1d4ed8;
+      border: 0;
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
     }
 
     .row {
@@ -124,7 +175,7 @@
       background: #d1d5db;
     }
 
-    .preset-grid {
+    .placement-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
@@ -194,19 +245,17 @@
       cursor: move;
       display: none;
       z-index: 5;
-      align-items: flex-start;
-      justify-content: flex-start;
     }
 
     .qr-content {
       display: flex;
       align-items: center;
       justify-content: flex-start;
-      gap: 8px;
-      background: rgba(255, 255, 255, 0.92);
+      background: rgba(255, 255, 255, 0.94);
       border: 2px dashed #2563eb;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.14);
       padding: 6px;
+      gap: 6px;
     }
 
     .qr-box {
@@ -220,14 +269,12 @@
     .qr-label {
       line-height: 1.1;
       white-space: nowrap;
-      word-break: normal;
       overflow: hidden;
       text-overflow: ellipsis;
       border: 1px solid rgba(0, 0, 0, 0.06);
-      background: rgba(255, 255, 255, 0.92);
+      background: rgba(255, 255, 255, 0.96);
       border-radius: 6px;
       padding: 4px 6px;
-      max-width: none;
       flex: 0 0 auto;
     }
 
@@ -252,7 +299,7 @@
     <div class="topbar">
       <a class="back-link" href="https://traktorogmaskin.github.io/Jobbhub/">← Tilbake til Jobbhub</a>
       <h1 class="title">QR-editor for PDF</h1>
-      <p class="subtitle">Start i midten, dra QR-en dit du vil, og lagre når det ser riktig ut.</p>
+      <p class="subtitle">Start midt på, dra QR-en dit du vil, og lagre når det ser riktig ut.</p>
     </div>
 
     <div class="layout">
@@ -285,8 +332,8 @@
         </div>
 
         <div class="field">
-          <label for="autoPlacement">Plassering</label>
-          <select id="autoPlacement">
+          <label for="placementMode">Plassering</label>
+          <select id="placementMode">
             <option value="manual" selected>Manuell</option>
             <option value="center">Midt på</option>
             <option value="bottom-right">Nede til høyre</option>
@@ -298,7 +345,7 @@
         <div class="row">
           <div class="field">
             <label for="qrSize">QR-størrelse</label>
-            <input type="range" id="qrSize" min="30" max="140" step="1" value="60" />
+            <input class="range-input" type="range" id="qrSize" min="30" max="140" step="1" value="60" />
           </div>
 
           <div class="field">
@@ -310,7 +357,7 @@
         <div class="row">
           <div class="field">
             <label for="labelSize">Tekststørrelse</label>
-            <input type="range" id="labelSize" min="8" max="18" step="1" value="10" />
+            <input class="range-input" type="range" id="labelSize" min="8" max="18" step="1" value="10" />
           </div>
 
           <div class="field">
@@ -322,7 +369,7 @@
         <div class="row">
           <div class="field">
             <label for="labelGap">Avstand QR/tekst</label>
-            <input type="range" id="labelGap" min="0" max="20" step="1" value="6" />
+            <input class="range-input" type="range" id="labelGap" min="0" max="20" step="1" value="6" />
           </div>
 
           <div class="field">
@@ -340,12 +387,12 @@
         </div>
 
         <div class="field">
-          <label>Presets</label>
-          <div class="preset-grid">
-            <button class="btn btn-secondary" type="button" id="presetCenter">Midt på</button>
-            <button class="btn btn-secondary" type="button" id="presetBottomRight">Nede til høyre</button>
-            <button class="btn btn-secondary" type="button" id="presetBottomLeft">Nede til venstre</button>
-            <button class="btn btn-secondary" type="button" id="presetTopRight">Oppe til høyre</button>
+          <label>Plassering</label>
+          <div class="placement-grid">
+            <button class="btn btn-secondary" type="button" id="placeCenter">Midt på</button>
+            <button class="btn btn-secondary" type="button" id="placeBottomRight">Nede til høyre</button>
+            <button class="btn btn-secondary" type="button" id="placeBottomLeft">Nede til venstre</button>
+            <button class="btn btn-secondary" type="button" id="placeTopRight">Oppe til høyre</button>
           </div>
         </div>
 
@@ -365,7 +412,7 @@
         </div>
 
         <div class="hint">
-          Standard er midt på. Flytt den med musen til ønsket plassering. Teksten er kort og holdes på én linje.
+          Standard er midt på. Dra QR-en med musen til ønsket plassering. Teksten holdes alltid utenfor QR-en.
         </div>
 
         <div class="status" id="status"></div>
@@ -415,7 +462,7 @@
       dragOffsetY: 0,
       overlayX: 0,
       overlayY: 0,
-      autoPlacementMode: "manual",
+      placementMode: "manual",
       hasManualPosition: false
     };
 
@@ -424,7 +471,7 @@
       qrUrl: document.getElementById("qrUrl"),
       qrText: document.getElementById("qrText"),
       textLayout: document.getElementById("textLayout"),
-      autoPlacement: document.getElementById("autoPlacement"),
+      placementMode: document.getElementById("placementMode"),
       qrSize: document.getElementById("qrSize"),
       qrSizeValue: document.getElementById("qrSizeValue"),
       labelSize: document.getElementById("labelSize"),
@@ -445,10 +492,10 @@
       qrBox: document.getElementById("qrBox"),
       qrCanvas: document.getElementById("qrCanvas"),
       qrLabel: document.getElementById("qrLabel"),
-      presetCenter: document.getElementById("presetCenter"),
-      presetBottomRight: document.getElementById("presetBottomRight"),
-      presetBottomLeft: document.getElementById("presetBottomLeft"),
-      presetTopRight: document.getElementById("presetTopRight")
+      placeCenter: document.getElementById("placeCenter"),
+      placeBottomRight: document.getElementById("placeBottomRight"),
+      placeBottomLeft: document.getElementById("placeBottomLeft"),
+      placeTopRight: document.getElementById("placeTopRight")
     };
 
     bindEvents();
@@ -461,11 +508,11 @@
       elements.qrText.addEventListener("input", refreshQrPreview);
       elements.textLayout.addEventListener("change", refreshQrPreview);
 
-      elements.autoPlacement.addEventListener("change", () => {
-        state.autoPlacementMode = elements.autoPlacement.value;
-        if (state.autoPlacementMode !== "manual") {
+      elements.placementMode.addEventListener("change", () => {
+        state.placementMode = elements.placementMode.value;
+        if (state.placementMode !== "manual") {
           state.hasManualPosition = false;
-          applyCurrentPlacementMode();
+          applyPlacementMode();
         }
       });
 
@@ -506,25 +553,25 @@
       });
 
       elements.posX.addEventListener("input", () => {
-        state.autoPlacementMode = "manual";
+        state.placementMode = "manual";
         state.hasManualPosition = true;
-        elements.autoPlacement.value = "manual";
+        elements.placementMode.value = "manual";
         state.overlayX = clamp(Number(elements.posX.value), 0, getMaxOverlayX());
         updateOverlayPosition();
       });
 
       elements.posY.addEventListener("input", () => {
-        state.autoPlacementMode = "manual";
+        state.placementMode = "manual";
         state.hasManualPosition = true;
-        elements.autoPlacement.value = "manual";
+        elements.placementMode.value = "manual";
         state.overlayY = clamp(Number(elements.posY.value), 0, getMaxOverlayY());
         updateOverlayPosition();
       });
 
-      elements.presetCenter.addEventListener("click", () => setPlacementMode("center"));
-      elements.presetBottomRight.addEventListener("click", () => setPlacementMode("bottom-right"));
-      elements.presetBottomLeft.addEventListener("click", () => setPlacementMode("bottom-left"));
-      elements.presetTopRight.addEventListener("click", () => setPlacementMode("top-right"));
+      elements.placeCenter.addEventListener("click", () => setPlacementMode("center"));
+      elements.placeBottomRight.addEventListener("click", () => setPlacementMode("bottom-right"));
+      elements.placeBottomLeft.addEventListener("click", () => setPlacementMode("bottom-left"));
+      elements.placeTopRight.addEventListener("click", () => setPlacementMode("top-right"));
 
       elements.qrOverlay.addEventListener("mousedown", startDrag);
       document.addEventListener("mousemove", onDrag);
@@ -563,6 +610,13 @@
       return elements.textLayout.value !== "hidden" && elements.qrText.value.trim() !== "";
     }
 
+    function measureTextWidth(text, fontSize) {
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+      context.font = `${fontSize}px Arial`;
+      return Math.ceil(context.measureText(text).width);
+    }
+
     function getLabelMetrics() {
       if (!isLabelVisible()) {
         return { width: 0, height: 0 };
@@ -570,47 +624,45 @@
 
       const text = elements.qrText.value.trim();
       const fontSize = getLabelSize();
-      const approxWidth = Math.max(60, text.length * fontSize * 0.58 + 12);
-      const approxHeight = fontSize + 10;
+      return {
+        width: Math.max(40, measureTextWidth(text, fontSize) + 14),
+        height: fontSize + 14
+      };
+    }
+
+    function getOverlayMetrics() {
+      const qrSize = getQrSize();
+      const label = getLabelMetrics();
+      const gap = getLabelGap();
+      const layout = elements.textLayout.value;
+      const padding = 12;
+
+      if (!isLabelVisible()) {
+        return {
+          width: qrSize + padding,
+          height: qrSize + padding
+        };
+      }
+
+      if (layout === "left" || layout === "right") {
+        return {
+          width: qrSize + label.width + gap + padding,
+          height: Math.max(qrSize, label.height) + padding
+        };
+      }
 
       return {
-        width: approxWidth,
-        height: approxHeight
+        width: Math.max(qrSize, label.width) + padding,
+        height: qrSize + label.height + gap + padding
       };
     }
 
     function getOverlayWidth() {
-      const qrSize = getQrSize();
-      const gap = getLabelGap();
-      const layout = elements.textLayout.value;
-      const label = getLabelMetrics();
-
-      if (!isLabelVisible()) {
-        return qrSize + 12;
-      }
-
-      if (layout === "left" || layout === "right") {
-        return qrSize + 12 + gap + label.width;
-      }
-
-      return Math.max(qrSize + 12, label.width);
+      return getOverlayMetrics().width;
     }
 
     function getOverlayHeight() {
-      const qrSize = getQrSize();
-      const gap = getLabelGap();
-      const layout = elements.textLayout.value;
-      const label = getLabelMetrics();
-
-      if (!isLabelVisible()) {
-        return qrSize + 12;
-      }
-
-      if (layout === "left" || layout === "right") {
-        return Math.max(qrSize + 12, label.height);
-      }
-
-      return qrSize + 12 + gap + label.height;
+      return getOverlayMetrics().height;
     }
 
     function getMaxOverlayX() {
@@ -658,8 +710,8 @@
         elements.qrOverlay.style.display = "flex";
         elements.previewMeta.textContent = `${file.name} • ${state.pageCount} side(r)`;
 
-        state.autoPlacementMode = "manual";
-        elements.autoPlacement.value = "manual";
+        state.placementMode = "manual";
+        elements.placementMode.value = "manual";
         state.hasManualPosition = false;
 
         await refreshQrPreview();
@@ -676,8 +728,9 @@
       const text = elements.qrText.value.trim();
       const qrSize = getQrSize();
       const labelSize = getLabelSize();
-      const labelGap = getLabelGap();
+      const gap = getLabelGap();
       const layout = elements.textLayout.value;
+      const label = getLabelMetrics();
 
       elements.qrCanvas.width = qrSize;
       elements.qrCanvas.height = qrSize;
@@ -686,19 +739,23 @@
 
       elements.qrLabel.textContent = text;
       elements.qrLabel.style.fontSize = `${labelSize}px`;
-      elements.qrLabel.style.display = isLabelVisible() ? "block" : "none";
+      elements.qrLabel.style.width = isLabelVisible() ? `${label.width}px` : "0px";
+      elements.qrLabel.style.height = isLabelVisible() ? `${label.height}px` : "0px";
+      elements.qrLabel.style.display = isLabelVisible() ? "flex" : "none";
+      elements.qrLabel.style.alignItems = "center";
+      elements.qrLabel.style.justifyContent = "center";
 
       if (layout === "bottom") {
         elements.qrContent.style.flexDirection = "column";
-        elements.qrContent.style.gap = `${labelGap}px`;
+        elements.qrContent.style.gap = `${gap}px`;
         elements.qrContent.style.alignItems = "center";
       } else if (layout === "right") {
         elements.qrContent.style.flexDirection = "row";
-        elements.qrContent.style.gap = `${labelGap}px`;
+        elements.qrContent.style.gap = `${gap}px`;
         elements.qrContent.style.alignItems = "center";
       } else if (layout === "left") {
         elements.qrContent.style.flexDirection = "row-reverse";
-        elements.qrContent.style.gap = `${labelGap}px`;
+        elements.qrContent.style.gap = `${gap}px`;
         elements.qrContent.style.alignItems = "center";
       } else {
         elements.qrContent.style.flexDirection = "row";
@@ -716,8 +773,8 @@
         ctx.clearRect(0, 0, qrSize, qrSize);
       }
 
-      if (state.autoPlacementMode !== "manual") {
-        applyCurrentPlacementMode();
+      if (state.placementMode !== "manual") {
+        applyPlacementMode();
       } else if (state.hasManualPosition) {
         state.overlayX = clamp(state.overlayX, 0, getMaxOverlayX());
         state.overlayY = clamp(state.overlayY, 0, getMaxOverlayY());
@@ -748,9 +805,9 @@
       }
 
       state.dragActive = true;
-      state.autoPlacementMode = "manual";
+      state.placementMode = "manual";
       state.hasManualPosition = true;
-      elements.autoPlacement.value = "manual";
+      elements.placementMode.value = "manual";
 
       const rect = elements.qrOverlay.getBoundingClientRect();
       state.dragOffsetX = event.clientX - rect.left;
@@ -776,13 +833,13 @@
     }
 
     function setPlacementMode(mode) {
-      state.autoPlacementMode = mode;
+      state.placementMode = mode;
       state.hasManualPosition = false;
-      elements.autoPlacement.value = mode;
-      applyCurrentPlacementMode();
+      elements.placementMode.value = mode;
+      applyPlacementMode();
     }
 
-    function applyCurrentPlacementMode() {
+    function applyPlacementMode() {
       if (!state.previewWidth || !state.previewHeight) {
         return;
       }
@@ -790,16 +847,16 @@
       const overlayWidth = getOverlayWidth();
       const overlayHeight = getOverlayHeight();
 
-      if (state.autoPlacementMode === "center") {
+      if (state.placementMode === "center") {
         state.overlayX = (state.previewWidth - overlayWidth) / 2;
         state.overlayY = (state.previewHeight - overlayHeight) / 2;
-      } else if (state.autoPlacementMode === "bottom-right") {
+      } else if (state.placementMode === "bottom-right") {
         state.overlayX = state.previewWidth - overlayWidth - 20;
         state.overlayY = state.previewHeight - overlayHeight - 20;
-      } else if (state.autoPlacementMode === "bottom-left") {
+      } else if (state.placementMode === "bottom-left") {
         state.overlayX = 20;
         state.overlayY = state.previewHeight - overlayHeight - 20;
-      } else if (state.autoPlacementMode === "top-right") {
+      } else if (state.placementMode === "top-right") {
         state.overlayX = state.previewWidth - overlayWidth - 20;
         state.overlayY = 20;
       }
@@ -855,12 +912,14 @@
         const qrSizePx = getQrSize();
         const labelSizePx = getLabelSize();
         const gapPx = getLabelGap();
+        const labelMetricsPx = getLabelMetrics();
 
         const qrSizePdf = (qrSizePx / state.previewWidth) * state.pdfPageWidth;
         const labelSizePdf = (labelSizePx / state.previewWidth) * state.pdfPageWidth;
         const gapPdf = (gapPx / state.previewWidth) * state.pdfPageWidth;
+        const labelWidthPdf = (labelMetricsPx.width / state.previewWidth) * state.pdfPageWidth;
 
-        const qrDataUrl = await createQrPngDataUrl(url, Math.max(300, qrSizePx * 5));
+        const qrDataUrl = await createQrPngDataUrl(url, Math.max(400, qrSizePx * 5));
         const qrImage = await pdfDoc.embedPng(qrDataUrl);
 
         const targetPages = applyMode === "first"
@@ -896,7 +955,7 @@
               textX = pdfX + qrSizePdf + gapPdf;
               textY = pdfQrY + (qrSizePdf / 2) - (labelSizePdf / 2);
             } else if (layout === "left") {
-              textX = Math.max(4, pdfX - textWidth - gapPdf);
+              textX = Math.max(4, pdfX - labelWidthPdf - gapPdf);
               textY = pdfQrY + (qrSizePdf / 2) - (labelSizePdf / 2);
             }
 
