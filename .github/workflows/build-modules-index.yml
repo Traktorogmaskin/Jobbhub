@@ -1,0 +1,47 @@
+name: Build modules index
+
+on:
+  push:
+    paths:
+      - 'modules/**'
+      - '.github/workflows/build-modules-index.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-index:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Generate modules index
+        run: |
+          mkdir -p data
+          echo "[" > data/modules-index.json
+
+          first=true
+          for file in modules/*/module.json; do
+            if [ -f "$file" ]; then
+              folder=$(basename "$(dirname "$file")")
+              if [ "$first" = true ]; then
+                echo "  \"$folder\"" >> data/modules-index.json
+                first=false
+              else
+                echo "  ,\"$folder\"" >> data/modules-index.json
+              fi
+            fi
+          done
+
+          echo "]" >> data/modules-index.json
+
+      - name: Commit modules index
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/modules-index.json
+          git diff --cached --quiet || git commit -m "Auto-update modules index"
+          git push
