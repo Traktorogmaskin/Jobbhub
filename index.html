@@ -7,7 +7,7 @@
 
   <meta
     name="description"
-    content="JobHub samler praktiske arbeidsverktøy, dokumentverktøy, generatorer og kalkulatorer på ett sted."
+    content="JobHub samler praktiske arbeidsverktøy, dokumentverktøy, kalkulatorer og andre moduler på ett sted."
   />
   <meta name="application-name" content="JobHub" />
   <meta name="theme-color" content="#f2633d" />
@@ -15,7 +15,7 @@
   <meta property="og:title" content="JobHub" />
   <meta
     property="og:description"
-    content="Intern plattform for praktiske arbeidsverktøy, dokumentverktøy, generatorer og kalkulatorer."
+    content="Intern plattform for praktiske arbeidsverktøy, dokumentverktøy, kalkulatorer og andre moduler."
   />
   <meta property="og:type" content="website" />
 
@@ -520,7 +520,7 @@
           <p id="brand-eyebrow">Internt verktøy</p>
           <h1 id="brand-title">JobHub</h1>
           <p id="brand-description">
-            Felles inngang til praktiske arbeidsverktøy, dokumentverktøy, generatorer og kalkulatorer.
+            Felles inngang til praktiske arbeidsverktøy, dokumentverktøy, kalkulatorer og andre moduler.
             Nye moduler legges inn automatisk når de opprettes riktig i mappestrukturen.
           </p>
         </div>
@@ -576,11 +576,8 @@
 
         <section id="quick-links" class="panel" aria-labelledby="quick-links-title">
           <h2 id="quick-links-title">Kategorier</h2>
-          <ul>
-            <li><a href="#dokumentverktoy">Dokumentverktøy</a></li>
-            <li><a href="#generatorer">Generatorer</a></li>
-            <li><a href="#kalkulatorer">Kalkulatorer</a></li>
-            <li><a href="#system">System</a></li>
+          <ul id="quick-links-list">
+            <li>Ingen kategorier lastet ennå.</li>
           </ul>
         </section>
       </aside>
@@ -590,7 +587,7 @@
           <h2 id="platform-intro-title">JobHub som baseplattform</h2>
           <p>
             JobHub er bygget for å samle interne verktøy i én fast struktur. Hver modul ligger i sin egen mappe,
-            har egen `module.json`, og blir oppdaget automatisk. Det gir renere drift, mindre vedlikehold og bedre skalering.
+            har egen <code>module.json</code>, og blir oppdaget automatisk. Det gir renere drift, mindre vedlikehold og bedre skalering.
           </p>
 
           <div class="hero-actions" aria-label="Hurtighandlinger">
@@ -637,37 +634,13 @@
         <section id="moduloversikt" class="content-section" aria-labelledby="moduloversikt-title">
           <header>
             <h2 id="moduloversikt-title">Moduloversikt</h2>
-            <p>Innholdet bygges automatisk fra `data/modules-index.json` og hver modul sin egen `module.json`.</p>
+            <p>Innholdet bygges automatisk fra <code>data/modules-index.json</code> og hver modul sin egen <code>module.json</code>.</p>
           </header>
 
           <div id="module-category-grid" class="category-grid">
-            <section id="dokumentverktoy" class="category-panel" aria-labelledby="dokumentverktoy-title">
-              <h3 id="dokumentverktoy-title">Dokumentverktøy</h3>
-              <div class="module-list" data-category="dokumentverktoy">
-                <article class="empty-card">Laster dokumentverktøy...</article>
-              </div>
-            </section>
-
-            <section id="generatorer" class="category-panel" aria-labelledby="generatorer-title">
-              <h3 id="generatorer-title">Generatorer</h3>
-              <div class="module-list" data-category="generatorer">
-                <article class="empty-card">Laster generatorer...</article>
-              </div>
-            </section>
-
-            <section id="kalkulatorer" class="category-panel" aria-labelledby="kalkulatorer-title">
-              <h3 id="kalkulatorer-title">Kalkulatorer</h3>
-              <div class="module-list" data-category="kalkulatorer">
-                <article class="empty-card">Laster kalkulatorer...</article>
-              </div>
-            </section>
-
-            <section id="system" class="category-panel" aria-labelledby="system-title">
-              <h3 id="system-title">System</h3>
-              <div class="module-list" data-category="system">
-                <article class="empty-card">Laster systemmoduler...</article>
-              </div>
-            </section>
+            <article class="empty-card">
+              Laster kategorier...
+            </article>
           </div>
         </section>
 
@@ -698,7 +671,8 @@
 
   <script>
     const featuredContainer = document.querySelector('[data-collection="featured-modules"]');
-    const categoryContainers = Array.from(document.querySelectorAll('[data-category]'));
+    const categoryGrid = document.getElementById('module-category-grid');
+    const quickLinksList = document.getElementById('quick-links-list');
     const searchForm = document.getElementById('global-search-form');
     const searchInput = document.getElementById('global-search-input');
 
@@ -706,7 +680,7 @@
 
     async function loadModules() {
       try {
-        const indexResponse = await fetch('data/modules-index.json?' + Date.now());
+        const indexResponse = await fetch('data/modules-index.json?' + Date.now(), { cache: 'no-store' });
         if (!indexResponse.ok) {
           throw new Error('Kunne ikke lese modules-index.json');
         }
@@ -745,21 +719,29 @@
       const fallbackSlug = parts[1] || parts[0] || 'modul';
 
       return {
-        id: safeText(moduleData.id || fallbackSlug),
-        title: safeText(moduleData.title || fallbackSlug),
+        id: safeText(moduleData.id || moduleData.slug || fallbackSlug),
+        title: safeText(moduleData.title || moduleData.name || fallbackSlug),
         description: safeText(moduleData.description || 'Ingen beskrivelse registrert.'),
         entry: safeText(moduleData.entry || 'index.html'),
         category: safeText(moduleData.category || fallbackCategory),
         status: safeText(moduleData.status || 'Aktiv'),
         featured: Boolean(moduleData.featured),
-        visible: moduleData.visible !== false,
+        visible: moduleData.enabled !== false && moduleData.visible !== false,
         modulePath
       };
     }
 
     function renderAllModules(modules) {
       const visibleModules = modules.filter((module) => module.visible);
+      const grouped = groupModulesByCategory(visibleModules);
+      const categoryNames = Object.keys(grouped).sort(sortText);
 
+      renderFeaturedModules(visibleModules);
+      renderCategoryPanels(grouped, categoryNames);
+      renderQuickLinks(categoryNames);
+    }
+
+    function renderFeaturedModules(visibleModules) {
       const featuredModules = visibleModules.filter((module) => module.featured);
       const fallbackFeatured = visibleModules.slice(0, 4);
       const modulesForFeatured = featuredModules.length ? featuredModules : fallbackFeatured;
@@ -767,15 +749,50 @@
       featuredContainer.innerHTML = modulesForFeatured.length
         ? modulesForFeatured.map(renderModuleCard).join('')
         : renderEmptyCard('Ingen moduler tilgjengelig.');
+    }
 
-      categoryContainers.forEach((container) => {
-        const category = container.dataset.category;
-        const categoryModules = visibleModules.filter((module) => module.category === category);
+    function renderCategoryPanels(grouped, categoryNames) {
+      if (!categoryNames.length) {
+        categoryGrid.innerHTML = renderEmptyCard('Ingen kategorier registrert.');
+        return;
+      }
 
-        container.innerHTML = categoryModules.length
-          ? categoryModules.map(renderModuleCard).join('')
-          : renderEmptyCard('Ingen moduler registrert i denne kategorien.');
-      });
+      categoryGrid.innerHTML = categoryNames.map((categoryName) => {
+        const modules = grouped[categoryName] || [];
+        const categoryId = createCategoryId(categoryName);
+
+        return `
+          <section id="${escapeAttribute(categoryId)}" class="category-panel" aria-labelledby="${escapeAttribute(categoryId)}-title">
+            <h3 id="${escapeAttribute(categoryId)}-title">${escapeHtml(formatCategoryLabel(categoryName))}</h3>
+            <div class="module-list" data-category="${escapeAttribute(categoryName.toLowerCase())}">
+              ${modules.length ? modules.map(renderModuleCard).join('') : renderEmptyCard('Ingen moduler registrert i denne kategorien.')}
+            </div>
+          </section>
+        `;
+      }).join('');
+    }
+
+    function renderQuickLinks(categoryNames) {
+      if (!categoryNames.length) {
+        quickLinksList.innerHTML = '<li>Ingen kategorier registrert.</li>';
+        return;
+      }
+
+      quickLinksList.innerHTML = categoryNames.map((categoryName) => {
+        const categoryId = createCategoryId(categoryName);
+        return `<li><a href="#${escapeAttribute(categoryId)}">${escapeHtml(formatCategoryLabel(categoryName))}</a></li>`;
+      }).join('');
+    }
+
+    function groupModulesByCategory(modules) {
+      return modules.reduce((acc, module) => {
+        const key = module.category || 'ukjent';
+        if (!acc[key]) {
+          acc[key] = [];
+        }
+        acc[key].push(module);
+        return acc;
+      }, {});
     }
 
     function renderModuleCard(module) {
@@ -786,7 +803,7 @@
           <div class="module-card-header">
             <div>
               <h4>${escapeHtml(module.title)}</h4>
-              <p class="module-meta">${escapeHtml(module.category)}</p>
+              <p class="module-meta">${escapeHtml(formatCategoryLabel(module.category))}</p>
             </div>
             <span class="module-status">${escapeHtml(module.status)}</span>
           </div>
@@ -808,9 +825,8 @@
 
     function renderLoadError(message) {
       featuredContainer.innerHTML = renderEmptyCard(message);
-      categoryContainers.forEach((container) => {
-        container.innerHTML = renderEmptyCard(message);
-      });
+      categoryGrid.innerHTML = renderEmptyCard(message);
+      quickLinksList.innerHTML = `<li>${escapeHtml(message)}</li>`;
 
       document.getElementById('registry-status').textContent = 'Feil';
       document.getElementById('total-modules-count').textContent = '0';
@@ -851,6 +867,30 @@
 
         card.classList.toggle('hidden', !match);
       });
+    }
+
+    function createCategoryId(value) {
+      return String(value || 'ukjent')
+        .trim()
+        .toLowerCase()
+        .replaceAll('æ', 'ae')
+        .replaceAll('ø', 'o')
+        .replaceAll('å', 'a')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+    }
+
+    function formatCategoryLabel(value) {
+      const text = String(value || '').trim();
+      if (!text) return 'Ukjent';
+
+      return text
+        .replaceAll('-', ' ')
+        .replace(/\b\w/g, (char) => char.toUpperCase());
+    }
+
+    function sortText(a, b) {
+      return String(a).localeCompare(String(b), 'no');
     }
 
     function safeText(value) {
