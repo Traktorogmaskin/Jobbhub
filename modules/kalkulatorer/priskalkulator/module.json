@@ -1,1 +1,7 @@
-
+{
+  "name": "Priskalkulator",
+  "slug": "priskalkulator",
+  "category": "kalkulatorer",
+  "entry": "index.html",
+  "enabled": true
+}
