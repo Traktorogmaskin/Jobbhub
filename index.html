@@ -3,48 +3,53 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>JobHub</title>
+  <title>ModulHub</title>
 
   <meta
     name="description"
-    content="JobHub samler praktiske arbeidsverktøy, dokumentverktøy, kalkulatorer og andre moduler på ett sted."
+    content="ModulHub er en intern, passordbeskyttet hub for praktiske arbeidsverktøy, logistikk, dokumentverktøy, kalkulatorer og fremtidige moduler."
   />
-  <meta name="application-name" content="JobHub" />
+  <meta name="application-name" content="ModulHub" />
   <meta name="theme-color" content="#f2633d" />
 
-  <meta property="og:title" content="JobHub" />
+  <meta property="og:title" content="ModulHub" />
   <meta
     property="og:description"
-    content="Intern plattform for praktiske arbeidsverktøy, dokumentverktøy, kalkulatorer og andre moduler."
+    content="Intern, passordbeskyttet plattform med felles backend, modulstruktur og sikker innlogging."
   />
   <meta property="og:type" content="website" />
 
-  <link rel="canonical" href="https://traktorogmaskin.github.io/JobHub/" />
+  <link rel="canonical" href="https://modulhub.no/" />
 
   <style>
     :root {
-      --bg: #f5f7fb;
+      --bg: #f4f7fb;
+      --bg-soft: #f9fbfd;
       --surface: #ffffff;
-      --surface-soft: #f9fafc;
-      --border: #d9e0ea;
+      --surface-alt: #f7f9fc;
+      --border: #d9e1ea;
       --text: #1f2937;
       --muted: #667085;
       --primary: #f2633d;
       --primary-dark: #d94d28;
+      --primary-soft: #fff3ee;
+      --navy: #1f2b3d;
+      --navy-2: #162131;
       --success: #137a4b;
+      --danger: #b42318;
+      --warning: #b54708;
       --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
-      --radius: 16px;
-      --radius-small: 12px;
-      --max-width: 1440px;
+      --shadow-soft: 0 4px 12px rgba(15, 23, 42, 0.05);
+      --radius-xl: 24px;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
+      --max-width: 1480px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
-    html {
-      scroll-behavior: smooth;
-    }
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
@@ -60,8 +65,28 @@
     }
 
     button,
-    input {
+    input,
+    select {
       font: inherit;
+    }
+
+    code {
+      font-family: Consolas, Monaco, monospace;
+      font-size: 0.95em;
+    }
+
+    .hidden { display: none !important; }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+      white-space: nowrap;
     }
 
     .skip-link {
@@ -75,99 +100,22 @@
       border-radius: 10px;
     }
 
-    .skip-link:focus {
-      top: 12px;
-    }
-
-    #app-shell {
-      min-height: 100vh;
-    }
-
-    #global-header {
-      background: linear-gradient(135deg, #ffffff 0%, #fff7f3 100%);
-      border-bottom: 1px solid var(--border);
-      padding: 28px 24px;
-    }
-
-    .header-inner {
-      max-width: var(--max-width);
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1.4fr 1fr;
-      gap: 24px;
-      align-items: end;
-    }
-
-    #brand-eyebrow {
-      margin: 0 0 8px;
-      font-size: 13px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    #brand-title {
-      margin: 0;
-      font-size: clamp(32px, 4vw, 52px);
-      line-height: 1.05;
-    }
-
-    #brand-description {
-      margin: 12px 0 0;
-      max-width: 720px;
-      color: var(--muted);
-      font-size: 17px;
-    }
-
-    #global-tools {
-      display: grid;
-      gap: 16px;
-      justify-items: end;
-    }
-
-    #global-search-form {
-      width: 100%;
-      max-width: 520px;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 10px;
-      align-items: center;
-    }
-
-    #global-search-form label {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip: rect(0 0 0 0);
-      white-space: nowrap;
-    }
-
-    #global-search-input {
-      width: 100%;
-      padding: 14px 16px;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      background: var(--surface);
-      outline: none;
-    }
-
-    #global-search-input:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 4px rgba(242, 99, 61, 0.12);
-    }
+    .skip-link:focus { top: 12px; }
 
     .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      gap: 8px;
       min-height: 46px;
       padding: 0 16px;
-      border: 1px solid var(--border);
       border-radius: 14px;
+      border: 1px solid var(--border);
       background: var(--surface);
+      color: var(--text);
       cursor: pointer;
       transition: 0.15s ease;
+      box-shadow: none;
     }
 
     .btn:hover {
@@ -177,8 +125,8 @@
 
     .btn-primary {
       background: var(--primary);
-      color: #fff;
       border-color: var(--primary);
+      color: #fff;
     }
 
     .btn-primary:hover {
@@ -186,97 +134,407 @@
       border-color: var(--primary-dark);
     }
 
-    #user-area {
+    .btn-soft {
+      background: var(--primary-soft);
+      border-color: #f5c6b8;
+      color: var(--primary-dark);
+    }
+
+    .btn-ghost-dark {
+      background: transparent;
+      border-color: rgba(255,255,255,0.16);
+      color: #fff;
+    }
+
+    .btn-ghost-dark:hover {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.28);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 32px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface-alt);
+      color: var(--muted);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .pill-ok {
+      background: #edf8f2;
+      border-color: #ccebd8;
+      color: var(--success);
+    }
+
+    .pill-warn {
+      background: #fff7ed;
+      border-color: #fed7aa;
+      color: var(--warning);
+    }
+
+    .pill-error {
+      background: #fff5f5;
+      border-color: #fecaca;
+      color: var(--danger);
+    }
+
+    .card,
+    .panel,
+    .hero,
+    .section-box,
+    .login-card,
+    .auth-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    #auth-shell {
+      min-height: 100vh;
+      padding: 24px;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at top left, #fff5ee 0%, #fff5ee 18%, transparent 45%),
+        linear-gradient(135deg, #f7f9fc 0%, #eef3f9 100%);
+    }
+
+    .auth-layout {
+      width: min(1220px, 100%);
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(360px, 0.85fr);
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .auth-panel {
+      border-radius: 28px;
+      overflow: hidden;
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
+      color: #fff;
+      border-color: rgba(255,255,255,0.06);
+    }
+
+    .auth-panel-inner {
+      padding: 42px;
+      min-height: 700px;
+      display: grid;
+      align-content: space-between;
+      gap: 30px;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: rgba(255,255,255,0.72);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 13px;
+    }
+
+    .auth-title {
+      margin: 0;
+      font-size: clamp(38px, 5vw, 62px);
+      line-height: 1.02;
+    }
+
+    .auth-lead {
+      margin: 16px 0 0;
+      max-width: 680px;
+      color: rgba(255,255,255,0.84);
+      font-size: 18px;
+    }
+
+    .auth-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .auth-item {
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .auth-item strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 16px;
+      color: #fff;
+    }
+
+    .auth-foot {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      justify-content: end;
     }
 
-    #platform-layout {
+    .auth-foot .pill {
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.88);
+      border-color: rgba(255,255,255,0.12);
+    }
+
+    .login-card {
+      border-radius: 28px;
+      overflow: hidden;
+    }
+
+    .login-card-inner {
+      padding: 34px;
+    }
+
+    .login-card h2 {
+      margin: 0 0 10px;
+      font-size: 32px;
+      line-height: 1.08;
+    }
+
+    .login-card p {
+      margin: 0 0 20px;
+      color: var(--muted);
+    }
+
+    .auth-form {
+      display: grid;
+      gap: 16px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field label {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .field input {
+      min-height: 50px;
+      width: 100%;
+      padding: 0 14px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--surface);
+      outline: none;
+      transition: 0.15s ease;
+    }
+
+    .field input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(242, 99, 61, 0.12);
+    }
+
+    .auth-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      min-height: 24px;
+    }
+
+    .auth-status {
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .auth-error {
+      min-height: 20px;
+      font-size: 14px;
+      color: var(--danger);
+    }
+
+    .auth-note {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 16px;
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    #app-shell {
+      min-height: 100vh;
+    }
+
+    #topbar {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: linear-gradient(135deg, #ffffff 0%, #fff7f3 100%);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+    }
+
+    .topbar-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 18px 24px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+      gap: 18px;
+      align-items: center;
+    }
+
+    .brand-wrap {
+      min-width: 0;
+    }
+
+    .brand-eyebrow {
+      margin: 0 0 6px;
+      font-size: 13px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .brand-title {
+      margin: 0;
+      font-size: clamp(30px, 4vw, 48px);
+      line-height: 1.06;
+    }
+
+    .brand-description {
+      margin: 10px 0 0;
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .topbar-tools {
+      display: grid;
+      gap: 14px;
+      justify-items: end;
+    }
+
+    .search-form {
+      width: 100%;
+      max-width: 520px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .search-form input {
+      min-height: 48px;
+      width: 100%;
+      padding: 0 15px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      outline: none;
+      background: var(--surface);
+    }
+
+    .search-form input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(242, 99, 61, 0.12);
+    }
+
+    .user-tools {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: end;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .current-user {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .layout {
       max-width: var(--max-width);
       margin: 0 auto;
       padding: 24px;
       display: grid;
-      grid-template-columns: 290px minmax(0, 1fr);
+      grid-template-columns: 300px minmax(0, 1fr);
       gap: 24px;
+      align-items: start;
     }
 
-    #sidebar {
+    .sidebar {
+      position: sticky;
+      top: 106px;
       display: grid;
       gap: 18px;
       align-content: start;
-      position: sticky;
-      top: 18px;
-      height: fit-content;
     }
 
     .panel {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
+      border-radius: 18px;
       padding: 18px;
+      min-width: 0;
     }
 
     .panel h2,
     .panel h3 {
-      margin-top: 0;
-      margin-bottom: 10px;
+      margin: 0 0 10px;
       font-size: 18px;
     }
 
     .panel p,
     .panel li {
+      margin: 0;
       color: var(--muted);
     }
 
-    #primary-navigation ul,
-    #module-status-overview ul,
-    #quick-links ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
+    .nav-list,
+    .simple-list {
       display: grid;
       gap: 8px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
     }
 
-    #primary-navigation a,
-    #quick-links a {
+    .nav-list a,
+    .simple-link {
       display: block;
       padding: 10px 12px;
-      border-radius: 10px;
-      background: var(--surface-soft);
+      border-radius: 12px;
+      background: var(--surface-alt);
+      border: 1px solid transparent;
+      transition: 0.15s ease;
     }
 
-    #primary-navigation a:hover,
-    #quick-links a:hover {
-      background: #fff1ec;
+    .nav-list a:hover,
+    .simple-link:hover {
+      background: var(--primary-soft);
+      border-color: #f5c6b8;
       color: var(--primary-dark);
     }
 
-    #main-content {
+    .main {
       display: grid;
       gap: 24px;
       min-width: 0;
     }
 
     .hero {
-      background: linear-gradient(135deg, #ffffff 0%, #fff8f5 100%);
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      box-shadow: var(--shadow);
+      border-radius: 24px;
       padding: 28px;
+      background: linear-gradient(135deg, #ffffff 0%, #fff8f4 100%);
     }
 
     .hero h2 {
       margin: 0 0 10px;
-      font-size: 28px;
+      font-size: 30px;
+      line-height: 1.08;
     }
 
     .hero p {
       margin: 0;
-      max-width: 840px;
+      max-width: 880px;
       color: var(--muted);
       font-size: 17px;
     }
@@ -288,6 +546,35 @@
       gap: 12px;
     }
 
+    .banner {
+      border-radius: 16px;
+      padding: 16px 18px;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .section-box {
+      border-radius: 24px;
+      padding: 24px;
+    }
+
+    .section-box header {
+      margin-bottom: 18px;
+    }
+
+    .section-box h2 {
+      margin: 0 0 8px;
+      font-size: 24px;
+      line-height: 1.1;
+    }
+
+    .section-box p {
+      margin: 0;
+      color: var(--muted);
+    }
+
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -297,45 +584,25 @@
     .stat-card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
+      border-radius: 18px;
+      box-shadow: var(--shadow-soft);
       padding: 18px;
     }
 
     .stat-label {
       margin: 0 0 8px;
-      color: var(--muted);
       font-size: 14px;
+      color: var(--muted);
     }
 
     .stat-value {
       margin: 0;
-      font-size: 28px;
+      font-size: 30px;
       font-weight: 700;
+      line-height: 1.1;
     }
 
-    .content-section {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      box-shadow: var(--shadow);
-      padding: 24px;
-    }
-
-    .content-section header {
-      margin-bottom: 18px;
-    }
-
-    .content-section h2 {
-      margin: 0 0 8px;
-      font-size: 24px;
-    }
-
-    .content-section p {
-      margin: 0;
-      color: var(--muted);
-    }
-
+    .module-list,
     .module-grid,
     .category-grid {
       display: grid;
@@ -347,9 +614,9 @@
     }
 
     .category-panel {
-      background: var(--surface-soft);
       border: 1px solid var(--border);
       border-radius: 18px;
+      background: var(--surface-alt);
       padding: 16px;
       min-width: 0;
     }
@@ -357,50 +624,36 @@
     .category-panel h3 {
       margin: 0 0 10px;
       font-size: 20px;
-    }
-
-    .module-list {
-      display: grid;
-      gap: 12px;
+      line-height: 1.1;
     }
 
     .module-card {
-      background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 16px;
+      background: var(--surface);
       padding: 16px;
+      box-shadow: var(--shadow-soft);
       transition: 0.15s ease;
+      min-width: 0;
     }
 
     .module-card:hover {
-      border-color: #f0b29f;
       transform: translateY(-1px);
+      border-color: #f0b29f;
     }
 
     .module-card-header {
       display: flex;
       justify-content: space-between;
-      align-items: start;
       gap: 12px;
+      align-items: start;
       margin-bottom: 10px;
-    }
-
-    .module-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      color: var(--success);
-      background: #edf8f2;
-      border: 1px solid #ccebd8;
-      border-radius: 999px;
-      padding: 6px 10px;
-      white-space: nowrap;
     }
 
     .module-card h4 {
       margin: 0;
       font-size: 18px;
+      line-height: 1.15;
     }
 
     .module-card p {
@@ -408,150 +661,223 @@
       color: var(--muted);
     }
 
-    .module-card-actions {
+    .module-meta {
+      margin-top: 4px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .module-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      color: var(--success);
+      border: 1px solid #ccebd8;
+      background: #edf8f2;
+      white-space: nowrap;
+    }
+
+    .module-actions {
       margin-top: 14px;
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
     }
 
-    .module-link {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 40px;
-      padding: 0 14px;
-      border-radius: 10px;
-      background: var(--primary);
-      color: #fff;
-    }
-
-    .module-link:hover {
-      background: var(--primary-dark);
-    }
-
-    .module-meta {
-      font-size: 13px;
-      color: var(--muted);
-    }
-
     .empty-card {
       border: 1px dashed var(--border);
       border-radius: 16px;
-      padding: 16px;
       background: #fcfcfd;
+      padding: 16px;
       color: var(--muted);
     }
 
-    .principles-list {
+    .principles {
       margin: 0;
       padding-left: 20px;
       display: grid;
       gap: 8px;
     }
 
-    #global-footer {
+    footer {
       max-width: var(--max-width);
       margin: 0 auto;
       padding: 0 24px 24px;
     }
 
-    #global-footer-inner {
-      border: 1px solid var(--border);
+    .footer-card {
       border-radius: 18px;
       background: var(--surface);
-      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
       padding: 18px 20px;
       color: var(--muted);
     }
 
-    .hidden {
-      display: none !important;
-    }
-
-    @media (max-width: 1100px) {
-      .header-inner,
-      #platform-layout,
+    @media (max-width: 1180px) {
+      .auth-layout,
+      .topbar-inner,
+      .layout,
       .stats-grid,
       .category-grid {
         grid-template-columns: 1fr;
       }
 
-      #sidebar {
+      .sidebar {
         position: static;
       }
 
-      #global-tools {
+      .topbar-tools {
         justify-items: stretch;
       }
 
-      #user-area {
+      .user-tools {
         justify-content: start;
       }
     }
 
-    @media (max-width: 640px) {
-      #global-header,
-      #platform-layout,
-      #global-footer {
+    @media (max-width: 720px) {
+      #auth-shell,
+      .layout,
+      footer,
+      .topbar-inner {
         padding-left: 16px;
         padding-right: 16px;
       }
 
+      .auth-panel-inner,
+      .login-card-inner,
       .hero,
-      .content-section,
+      .section-box,
       .panel {
         padding: 18px;
       }
 
-      .hero h2 {
+      .hero h2,
+      .login-card h2 {
         font-size: 24px;
       }
     }
   </style>
 </head>
-<body data-app="jobhub" data-layout="platform" data-user-state="guest">
+<body data-app="modulhub" data-user-state="guest">
   <a href="#main-content" class="skip-link">Hopp til innhold</a>
 
-  <div id="app-shell">
-    <header id="global-header" aria-label="Global toppbar">
-      <div class="header-inner">
-        <div id="brand-area">
-          <p id="brand-eyebrow">Internt verktøy</p>
-          <h1 id="brand-title">JobHub</h1>
-          <p id="brand-description">
-            Felles inngang til praktiske arbeidsverktøy, dokumentverktøy, kalkulatorer og andre moduler.
-            Nye moduler legges inn automatisk når de opprettes riktig i mappestrukturen.
+  <section id="auth-shell" aria-labelledby="login-title">
+    <div class="auth-layout">
+      <article class="auth-panel" aria-label="Introduksjon til ModulHub">
+        <div class="auth-panel-inner">
+          <div>
+            <p class="eyebrow">Intern plattform</p>
+            <h1 class="auth-title">ModulHub</h1>
+            <p class="auth-lead">
+              Passordbeskyttet hub for praktiske arbeidsverktøy, logistikk, dokumentverktøy, kalkulatorer og nye moduler i én felles, kontrollert struktur.
+            </p>
+          </div>
+
+          <div class="auth-grid">
+            <section class="auth-item">
+              <strong>Én innlogging for hele huben</strong>
+              Tilgang skal styres sentralt. Ingen modul skal ha egen innlogging.
+            </section>
+
+            <section class="auth-item">
+              <strong>Felles backend på tvers av moduler</strong>
+              Autentisering, lagring, PDF, utskrift, logging og modulregister skal bygges som delte tjenester.
+            </section>
+
+            <section class="auth-item">
+              <strong>Bygget for trygg intern uttesting først</strong>
+              Plattformen skal være lukket for uvedkommende nå, men samtidig klar for senere lisensiering og videre vekst.
+            </section>
+          </div>
+
+          <div class="auth-foot">
+            <span class="pill">Hub-nivå autentisering</span>
+            <span class="pill">Modulbasert arkitektur</span>
+            <span class="pill">Klar for videre skalering</span>
+          </div>
+        </div>
+      </article>
+
+      <section class="login-card" aria-labelledby="login-title">
+        <div class="login-card-inner">
+          <h2 id="login-title">Logg inn</h2>
+          <p>
+            Du må være autentisert for å få tilgang til ModulHub og alle moduler som ligger bak huben.
+          </p>
+
+          <form id="login-form" class="auth-form" autocomplete="off">
+            <div class="field">
+              <label for="username">Brukernavn</label>
+              <input id="username" name="username" type="text" autocomplete="username" required />
+            </div>
+
+            <div class="field">
+              <label for="password">Passord</label>
+              <input id="password" name="password" type="password" autocomplete="current-password" required />
+            </div>
+
+            <div class="auth-row">
+              <span id="auth-status" class="auth-status">Sjekker innloggingsstatus...</span>
+              <span id="auth-error" class="auth-error" aria-live="polite"></span>
+            </div>
+
+            <button id="login-submit" type="submit" class="btn btn-primary">Logg inn</button>
+          </form>
+
+          <div class="auth-note">
+            Denne filen forutsetter at backend eksponerer <code>/auth/session</code>, <code>/auth/login</code> og <code>/auth/logout</code>.
+            Frontend alene gir ikke reell sikkerhet uten backend-validasjon og session-håndtering.
+          </div>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <div id="app-shell" class="hidden">
+    <header id="topbar" aria-label="Global toppbar">
+      <div class="topbar-inner">
+        <div class="brand-wrap">
+          <p class="brand-eyebrow">Intern plattform</p>
+          <h1 class="brand-title">ModulHub</h1>
+          <p class="brand-description">
+            Felles inngang til praktiske arbeidsverktøy, logistikk, dokumentverktøy, kalkulatorer og videre modulutvikling i én stabil, sikker plattform.
           </p>
         </div>
 
-        <div id="global-tools" aria-label="Globale verktøy">
-          <form id="global-search-form" role="search" aria-label="Globalt søk">
-            <label for="global-search-input">Søk</label>
+        <div class="topbar-tools">
+          <form id="global-search-form" class="search-form" role="search" aria-label="Søk i moduler">
+            <label class="sr-only" for="global-search-input">Søk i moduler</label>
             <input
-              type="search"
               id="global-search-input"
               name="q"
+              type="search"
               placeholder="Søk etter modul eller kategori"
               autocomplete="off"
             />
             <button type="submit" class="btn btn-primary">Søk</button>
           </form>
 
-          <div id="user-area" aria-label="Brukerområde">
+          <div class="user-tools" aria-label="Brukerområde">
+            <span id="auth-indicator" class="pill pill-ok">Innlogget</span>
+            <span id="current-user" class="current-user">Ukjent bruker</span>
             <button type="button" class="btn">Hurtigvalg</button>
             <button type="button" class="btn">Varsler</button>
-            <button type="button" class="btn">Konto</button>
+            <button id="logout-button" type="button" class="btn">Logg ut</button>
           </div>
         </div>
       </div>
     </header>
 
-    <div id="platform-layout">
-      <aside id="sidebar" aria-label="JobHub navigasjon">
-        <nav id="primary-navigation" class="panel" aria-label="Primærnavigasjon">
-          <h2>Navigasjon</h2>
-          <ul>
+    <div class="layout">
+      <aside class="sidebar" aria-label="ModulHub navigasjon">
+        <nav class="panel" aria-labelledby="nav-title">
+          <h2 id="nav-title">Navigasjon</h2>
+          <ul class="nav-list">
             <li><a href="#platform-intro">Startside</a></li>
             <li><a href="#mine-moduler">Mine moduler</a></li>
             <li><a href="#moduloversikt">Moduloversikt</a></li>
@@ -559,38 +885,47 @@
           </ul>
         </nav>
 
-        <section id="workspace-switcher" class="panel" aria-labelledby="workspace-switcher-title">
-          <h2 id="workspace-switcher-title">Arbeidsområde</h2>
+        <section class="panel" aria-labelledby="workspace-title">
+          <h2 id="workspace-title">Arbeidsområde</h2>
           <p>Standard arbeidsområde er aktivt.</p>
-          <button type="button" class="btn">Bytt arbeidsområde</button>
+          <div style="margin-top: 14px;">
+            <button type="button" class="btn">Bytt arbeidsområde</button>
+          </div>
         </section>
 
-        <section id="module-status-overview" class="panel" aria-labelledby="module-status-title">
-          <h2 id="module-status-title">Status</h2>
-          <ul>
-            <li><strong id="stable-modules-count">0</strong> aktive moduler</li>
-            <li><strong id="visible-categories-count">0</strong> kategorier i bruk</li>
-            <li><strong id="featured-modules-count">0</strong> utvalgte moduler</li>
+        <section class="panel" aria-labelledby="status-title">
+          <h2 id="status-title">Status</h2>
+          <ul class="simple-list">
+            <li><span id="stable-modules-count">0</span> aktive moduler</li>
+            <li><span id="visible-categories-count">0</span> kategorier i bruk</li>
+            <li><span id="featured-modules-count">0</span> utvalgte moduler</li>
           </ul>
         </section>
 
-        <section id="quick-links" class="panel" aria-labelledby="quick-links-title">
-          <h2 id="quick-links-title">Kategorier</h2>
-          <ul id="quick-links-list">
+        <section class="panel" aria-labelledby="categories-title">
+          <h2 id="categories-title">Kategorier</h2>
+          <ul id="quick-links-list" class="simple-list">
             <li>Ingen kategorier lastet ennå.</li>
           </ul>
         </section>
       </aside>
 
-      <main id="main-content">
-        <section id="platform-intro" class="hero" aria-labelledby="platform-intro-title">
-          <h2 id="platform-intro-title">JobHub som baseplattform</h2>
+      <main id="main-content" class="main">
+        <section id="app-banner" class="banner hidden" aria-live="polite">
+          <div>
+            <strong id="app-banner-title">Status</strong>
+            <div id="app-banner-message">Ingen melding.</div>
+          </div>
+          <button id="app-banner-close" type="button" class="btn">Lukk</button>
+        </section>
+
+        <section id="platform-intro" class="hero" aria-labelledby="platform-title">
+          <h2 id="platform-title">ModulHub som baseplattform</h2>
           <p>
-            JobHub er bygget for å samle interne verktøy i én fast struktur. Hver modul ligger i sin egen mappe,
-            har egen <code>module.json</code>, og blir oppdaget automatisk. Det gir renere drift, mindre vedlikehold og bedre skalering.
+            ModulHub er bygget for å samle interne verktøy i én fast struktur. Hver modul skal kunne leve selvstendig, mens huben håndterer innlogging, navigasjon, oversikt og felles drift på tvers av hele systemet.
           </p>
 
-          <div class="hero-actions" aria-label="Hurtighandlinger">
+          <div class="hero-actions">
             <a href="#mine-moduler" class="btn btn-primary">Gå til mine moduler</a>
             <a href="#moduloversikt" class="btn">Se moduloversikt</a>
           </div>
@@ -599,302 +934,116 @@
         <section class="stats-grid" aria-label="Nøkkeltall">
           <article class="stat-card">
             <p class="stat-label">Totalt aktive moduler</p>
-            <p class="stat-value" id="total-modules-count">0</p>
+            <p id="total-modules-count" class="stat-value">0</p>
           </article>
 
           <article class="stat-card">
             <p class="stat-label">Utvalgte moduler</p>
-            <p class="stat-value" id="featured-count">0</p>
+            <p id="featured-count" class="stat-value">0</p>
           </article>
 
           <article class="stat-card">
             <p class="stat-label">Kategorier med innhold</p>
-            <p class="stat-value" id="category-count">0</p>
+            <p id="category-count" class="stat-value">0</p>
           </article>
 
           <article class="stat-card">
             <p class="stat-label">Sist lastet modulregister</p>
-            <p class="stat-value" id="registry-status">OK</p>
+            <p id="registry-status" class="stat-value">OK</p>
           </article>
         </section>
 
-        <section id="mine-moduler" class="content-section" aria-labelledby="mine-moduler-title">
+        <section id="mine-moduler" class="section-box" aria-labelledby="mine-moduler-title">
           <header>
             <h2 id="mine-moduler-title">Mine moduler</h2>
-            <p>Utvalgte moduler vises automatisk her. Hvis ingen er merket som utvalgte, vises de første tilgjengelige modulene.</p>
+            <p>Utvalgte moduler vises automatisk her. Hvis ingen er markert som utvalgte, vises de første tilgjengelige modulene.</p>
           </header>
 
-          <div id="mine-moduler-grid" class="module-grid" data-collection="featured-modules">
-            <article class="empty-card">
-              Laster moduler...
-            </article>
+          <div id="mine-moduler-grid" class="module-grid">
+            <article class="empty-card">Laster moduler...</article>
           </div>
         </section>
 
-        <section id="moduloversikt" class="content-section" aria-labelledby="moduloversikt-title">
+        <section id="moduloversikt" class="section-box" aria-labelledby="moduloversikt-title">
           <header>
             <h2 id="moduloversikt-title">Moduloversikt</h2>
-            <p>Innholdet bygges automatisk fra <code>data/modules-index.json</code> og hver modul sin egen <code>module.json</code>.</p>
+            <p>Moduler grupperes automatisk fra felles modulregister og hver modul sin egen metadatafil.</p>
           </header>
 
           <div id="module-category-grid" class="category-grid">
-            <article class="empty-card">
-              Laster kategorier...
-            </article>
+            <article class="empty-card">Laster kategorier...</article>
           </div>
         </section>
 
-        <section id="grunnprinsipper" class="content-section" aria-labelledby="grunnprinsipper-title">
+        <section id="grunnprinsipper" class="section-box" aria-labelledby="grunnprinsipper-title">
           <header>
             <h2 id="grunnprinsipper-title">Grunnprinsipper</h2>
           </header>
 
-          <ul class="principles-list">
-            <li>Lik struktur på tvers av moduler.</li>
-            <li>Minst mulig manuelt vedlikehold.</li>
-            <li>Hver modul skal være lett å forstå og lett å åpne.</li>
-            <li>Ny modul skal kunne legges inn uten å redigere hele plattformen.</li>
-            <li>Basen skal være stabil, mens modulene skal kunne vokse fritt.</li>
-            <li>Tydelige kategorier og ren navigasjon.</li>
-            <li>Systemet skal hjelpe, ikke skape ekstra arbeid.</li>
+          <ul class="principles">
+            <li>Én sentral innlogging for hele huben.</li>
+            <li>Lik modulstruktur og felles backend-tjenester.</li>
+            <li>Ingen modul skal bryte kjernen eller navigasjonen.</li>
+            <li>Felles tjenester for lagring, PDF, utskrift, logging og autentisering.</li>
+            <li>Plattformen skal være enkel å bruke og enkel å videreutvikle.</li>
+            <li>Ny modul skal kunne kobles inn uten å skrive om hele systemet.</li>
           </ul>
         </section>
       </main>
     </div>
 
-    <footer id="global-footer">
-      <div id="global-footer-inner">
-        JobHub er baseplattformen for praktiske arbeidsverktøy i Traktor og Maskin AS.
+    <footer>
+      <div class="footer-card">
+        ModulHub er baseplattformen for interne arbeidsverktøy, moduler og videre produktutvikling i Traktor og Maskin AS.
       </div>
     </footer>
   </div>
 
   <script>
-    const featuredContainer = document.querySelector('[data-collection="featured-modules"]');
+    const AUTH_ENDPOINTS = {
+      session: '/auth/session',
+      login: '/auth/login',
+      logout: '/auth/logout'
+    };
+
+    const MODULE_INDEX_PATH = 'data/modules-index.json';
+
+    const authShell = document.getElementById('auth-shell');
+    const appShell = document.getElementById('app-shell');
+    const loginForm = document.getElementById('login-form');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const loginSubmit = document.getElementById('login-submit');
+    const authStatus = document.getElementById('auth-status');
+    const authError = document.getElementById('auth-error');
+    const logoutButton = document.getElementById('logout-button');
+    const currentUser = document.getElementById('current-user');
+    const authIndicator = document.getElementById('auth-indicator');
+
+    const featuredContainer = document.getElementById('mine-moduler-grid');
     const categoryGrid = document.getElementById('module-category-grid');
     const quickLinksList = document.getElementById('quick-links-list');
     const searchForm = document.getElementById('global-search-form');
     const searchInput = document.getElementById('global-search-input');
 
+    const banner = document.getElementById('app-banner');
+    const bannerTitle = document.getElementById('app-banner-title');
+    const bannerMessage = document.getElementById('app-banner-message');
+    const bannerClose = document.getElementById('app-banner-close');
+
+    const stableModulesCount = document.getElementById('stable-modules-count');
+    const visibleCategoriesCount = document.getElementById('visible-categories-count');
+    const featuredModulesCount = document.getElementById('featured-modules-count');
+    const totalModulesCount = document.getElementById('total-modules-count');
+    const featuredCount = document.getElementById('featured-count');
+    const categoryCount = document.getElementById('category-count');
+    const registryStatus = document.getElementById('registry-status');
+
     let loadedModules = [];
+    let sessionUser = null;
 
-    async function loadModules() {
-      try {
-        const indexResponse = await fetch('data/modules-index.json?' + Date.now(), { cache: 'no-store' });
-        if (!indexResponse.ok) {
-          throw new Error('Kunne ikke lese modules-index.json');
-        }
-
-        const modulePaths = await indexResponse.json();
-
-        if (!Array.isArray(modulePaths)) {
-          throw new Error('Modulregisteret har ugyldig format.');
-        }
-
-        const moduleResults = await Promise.all(
-          modulePaths.map(async (modulePath) => {
-            const response = await fetch(`modules/${modulePath}/module.json`, { cache: 'no-store' });
-            if (!response.ok) {
-              throw new Error(`Kunne ikke lese module.json for ${modulePath}`);
-            }
-
-            const moduleData = await response.json();
-            return normalizeModule(moduleData, modulePath);
-          })
-        );
-
-        loadedModules = moduleResults.filter(Boolean);
-
-        renderAllModules(loadedModules);
-        updateStats(loadedModules);
-      } catch (error) {
-        console.error(error);
-        renderLoadError('Kunne ikke laste modulregister.');
-      }
-    }
-
-    function normalizeModule(moduleData, modulePath) {
-      const parts = String(modulePath).split('/');
-      const fallbackCategory = parts[0] || 'ukjent';
-      const fallbackSlug = parts[1] || parts[0] || 'modul';
-
-      return {
-        id: safeText(moduleData.id || moduleData.slug || fallbackSlug),
-        title: safeText(moduleData.title || moduleData.name || fallbackSlug),
-        description: safeText(moduleData.description || 'Ingen beskrivelse registrert.'),
-        entry: safeText(moduleData.entry || 'index.html'),
-        category: safeText(moduleData.category || fallbackCategory),
-        status: safeText(moduleData.status || 'Aktiv'),
-        featured: Boolean(moduleData.featured),
-        visible: moduleData.enabled !== false && moduleData.visible !== false,
-        modulePath
-      };
-    }
-
-    function renderAllModules(modules) {
-      const visibleModules = modules.filter((module) => module.visible);
-      const grouped = groupModulesByCategory(visibleModules);
-      const categoryNames = Object.keys(grouped).sort(sortText);
-
-      renderFeaturedModules(visibleModules);
-      renderCategoryPanels(grouped, categoryNames);
-      renderQuickLinks(categoryNames);
-    }
-
-    function renderFeaturedModules(visibleModules) {
-      const featuredModules = visibleModules.filter((module) => module.featured);
-      const fallbackFeatured = visibleModules.slice(0, 4);
-      const modulesForFeatured = featuredModules.length ? featuredModules : fallbackFeatured;
-
-      featuredContainer.innerHTML = modulesForFeatured.length
-        ? modulesForFeatured.map(renderModuleCard).join('')
-        : renderEmptyCard('Ingen moduler tilgjengelig.');
-    }
-
-    function renderCategoryPanels(grouped, categoryNames) {
-      if (!categoryNames.length) {
-        categoryGrid.innerHTML = renderEmptyCard('Ingen kategorier registrert.');
-        return;
-      }
-
-      categoryGrid.innerHTML = categoryNames.map((categoryName) => {
-        const modules = grouped[categoryName] || [];
-        const categoryId = createCategoryId(categoryName);
-
-        return `
-          <section id="${escapeAttribute(categoryId)}" class="category-panel" aria-labelledby="${escapeAttribute(categoryId)}-title">
-            <h3 id="${escapeAttribute(categoryId)}-title">${escapeHtml(formatCategoryLabel(categoryName))}</h3>
-            <div class="module-list" data-category="${escapeAttribute(categoryName.toLowerCase())}">
-              ${modules.length ? modules.map(renderModuleCard).join('') : renderEmptyCard('Ingen moduler registrert i denne kategorien.')}
-            </div>
-          </section>
-        `;
-      }).join('');
-    }
-
-    function renderQuickLinks(categoryNames) {
-      if (!categoryNames.length) {
-        quickLinksList.innerHTML = '<li>Ingen kategorier registrert.</li>';
-        return;
-      }
-
-      quickLinksList.innerHTML = categoryNames.map((categoryName) => {
-        const categoryId = createCategoryId(categoryName);
-        return `<li><a href="#${escapeAttribute(categoryId)}">${escapeHtml(formatCategoryLabel(categoryName))}</a></li>`;
-      }).join('');
-    }
-
-    function groupModulesByCategory(modules) {
-      return modules.reduce((acc, module) => {
-        const key = module.category || 'ukjent';
-        if (!acc[key]) {
-          acc[key] = [];
-        }
-        acc[key].push(module);
-        return acc;
-      }, {});
-    }
-
-    function renderModuleCard(module) {
-      const moduleHref = `modules/${module.modulePath}/${module.entry}`;
-
-      return `
-        <article class="module-card" data-module-id="${escapeHtml(module.id)}" data-module-title="${escapeHtml(module.title.toLowerCase())}" data-module-category="${escapeHtml(module.category.toLowerCase())}">
-          <div class="module-card-header">
-            <div>
-              <h4>${escapeHtml(module.title)}</h4>
-              <p class="module-meta">${escapeHtml(formatCategoryLabel(module.category))}</p>
-            </div>
-            <span class="module-status">${escapeHtml(module.status)}</span>
-          </div>
-          <p>${escapeHtml(module.description)}</p>
-          <div class="module-card-actions">
-            <a class="module-link" href="${escapeAttribute(moduleHref)}">Åpne modul</a>
-          </div>
-        </article>
-      `;
-    }
-
-    function renderEmptyCard(message) {
-      return `
-        <article class="empty-card">
-          ${escapeHtml(message)}
-        </article>
-      `;
-    }
-
-    function renderLoadError(message) {
-      featuredContainer.innerHTML = renderEmptyCard(message);
-      categoryGrid.innerHTML = renderEmptyCard(message);
-      quickLinksList.innerHTML = `<li>${escapeHtml(message)}</li>`;
-
-      document.getElementById('registry-status').textContent = 'Feil';
-      document.getElementById('total-modules-count').textContent = '0';
-      document.getElementById('featured-count').textContent = '0';
-      document.getElementById('category-count').textContent = '0';
-      document.getElementById('stable-modules-count').textContent = '0';
-      document.getElementById('visible-categories-count').textContent = '0';
-      document.getElementById('featured-modules-count').textContent = '0';
-    }
-
-    function updateStats(modules) {
-      const visibleModules = modules.filter((module) => module.visible);
-      const featuredModules = visibleModules.filter((module) => module.featured);
-      const activeCategories = new Set(visibleModules.map((module) => module.category));
-
-      document.getElementById('registry-status').textContent = 'OK';
-      document.getElementById('total-modules-count').textContent = String(visibleModules.length);
-      document.getElementById('featured-count').textContent = String(featuredModules.length || Math.min(visibleModules.length, 4));
-      document.getElementById('category-count').textContent = String(activeCategories.size);
-      document.getElementById('stable-modules-count').textContent = String(visibleModules.length);
-      document.getElementById('visible-categories-count').textContent = String(activeCategories.size);
-      document.getElementById('featured-modules-count').textContent = String(featuredModules.length || Math.min(visibleModules.length, 4));
-    }
-
-    function filterModules(term) {
-      const normalizedTerm = term.trim().toLowerCase();
-      const cards = Array.from(document.querySelectorAll('.module-card'));
-
-      if (!normalizedTerm) {
-        cards.forEach((card) => card.classList.remove('hidden'));
-        return;
-      }
-
-      cards.forEach((card) => {
-        const title = card.dataset.moduleTitle || '';
-        const category = card.dataset.moduleCategory || '';
-        const match = title.includes(normalizedTerm) || category.includes(normalizedTerm);
-
-        card.classList.toggle('hidden', !match);
-      });
-    }
-
-    function createCategoryId(value) {
-      return String(value || 'ukjent')
-        .trim()
-        .toLowerCase()
-        .replaceAll('æ', 'ae')
-        .replaceAll('ø', 'o')
-        .replaceAll('å', 'a')
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '');
-    }
-
-    function formatCategoryLabel(value) {
-      const text = String(value || '').trim();
-      if (!text) return 'Ukjent';
-
-      return text
-        .replaceAll('-', ' ')
-        .replace(/\b\w/g, (char) => char.toUpperCase());
-    }
-
-    function sortText(a, b) {
-      return String(a).localeCompare(String(b), 'no');
-    }
-
-    function safeText(value) {
-      return String(value || '').trim();
+    function safeText(value, fallback = '') {
+      return typeof value === 'string' && value.trim() ? value.trim() : fallback;
     }
 
     function escapeHtml(value) {
@@ -907,19 +1056,341 @@
     }
 
     function escapeAttribute(value) {
-      return escapeHtml(value);
+      return escapeHtml(value).replaceAll('`', '&#96;');
+    }
+
+    function createCategoryId(categoryName) {
+      return 'category-' + String(categoryName || 'ukjent')
+        .toLowerCase()
+        .normalize('NFKD')
+        .replace(/[^\w\s-]/g, '')
+        .trim()
+        .replace(/\s+/g, '-');
+    }
+
+    function formatCategoryLabel(value) {
+      const text = safeText(value, 'Ukjent');
+      return text.charAt(0).toUpperCase() + text.slice(1);
+    }
+
+    function sortText(a, b) {
+      return String(a).localeCompare(String(b), 'no', { sensitivity: 'base' });
+    }
+
+    function showBanner(title, message, type = 'info') {
+      bannerTitle.textContent = title;
+      bannerMessage.textContent = message;
+      banner.classList.remove('hidden', 'pill-ok', 'pill-warn', 'pill-error');
+      if (type === 'ok') banner.classList.add('pill-ok');
+      if (type === 'warn') banner.classList.add('pill-warn');
+      if (type === 'error') banner.classList.add('pill-error');
+    }
+
+    bannerClose.addEventListener('click', () => banner.classList.add('hidden'));
+
+    function showLoginView() {
+      document.body.dataset.userState = 'guest';
+      authShell.classList.remove('hidden');
+      appShell.classList.add('hidden');
+      usernameInput.focus();
+    }
+
+    function showAppView(user) {
+      sessionUser = user || null;
+      document.body.dataset.userState = 'authenticated';
+      authShell.classList.add('hidden');
+      appShell.classList.remove('hidden');
+
+      const displayName = user?.display_name || user?.full_name || user?.username || 'Innlogget bruker';
+      const role = user?.role ? ` · ${user.role}` : '';
+
+      currentUser.textContent = displayName;
+      authIndicator.textContent = `Innlogget${role}`;
+    }
+
+    async function getJson(url, options = {}) {
+      const response = await fetch(url, {
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(options.headers || {})
+        },
+        ...options
+      });
+
+      let data = null;
+      try {
+        data = await response.json();
+      } catch (_) {
+        data = null;
+      }
+
+      return { response, data };
+    }
+
+    function setStats(total, featured, categories, statusText = 'OK') {
+      totalModulesCount.textContent = String(total);
+      featuredCount.textContent = String(featured);
+      categoryCount.textContent = String(categories);
+      stableModulesCount.textContent = String(total);
+      visibleCategoriesCount.textContent = String(categories);
+      featuredModulesCount.textContent = String(featured);
+      registryStatus.textContent = statusText;
+    }
+
+    async function checkSession() {
+      authStatus.textContent = 'Sjekker innloggingsstatus...';
+      authError.textContent = '';
+
+      try {
+        const { response, data } = await getJson(AUTH_ENDPOINTS.session, {
+          method: 'GET',
+          cache: 'no-store'
+        });
+
+        if (response.ok && data?.authenticated) {
+          authStatus.textContent = 'Innlogget.';
+          showAppView(data.user || {});
+          await loadModules();
+          return;
+        }
+
+        authStatus.textContent = data?.message || 'Ikke innlogget.';
+        showLoginView();
+      } catch (error) {
+        authStatus.textContent = 'Autentiseringstjenesten svarer ikke.';
+        authError.textContent = 'Backend må støtte /auth/session, /auth/login og /auth/logout.';
+        showLoginView();
+      }
+    }
+
+    loginForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      authError.textContent = '';
+      authStatus.textContent = 'Logger inn...';
+      loginSubmit.disabled = true;
+
+      try {
+        const payload = {
+          username: usernameInput.value.trim(),
+          password: passwordInput.value
+        };
+
+        const { response, data } = await getJson(AUTH_ENDPOINTS.login, {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok || !data?.authenticated) {
+          authStatus.textContent = 'Innlogging mislyktes.';
+          authError.textContent = data?.message || 'Ugyldig brukernavn eller passord.';
+          loginSubmit.disabled = false;
+          return;
+        }
+
+        passwordInput.value = '';
+        authStatus.textContent = 'Innlogget.';
+        showAppView(data.user || { username: payload.username });
+        await loadModules();
+      } catch (error) {
+        authStatus.textContent = 'Innlogging mislyktes.';
+        authError.textContent = 'Kunne ikke kontakte innloggingstjenesten.';
+      } finally {
+        loginSubmit.disabled = false;
+      }
+    });
+
+    logoutButton.addEventListener('click', async () => {
+      try {
+        await getJson(AUTH_ENDPOINTS.logout, { method: 'POST' });
+      } catch (_) {}
+
+      sessionUser = null;
+      loadedModules = [];
+      featuredContainer.innerHTML = renderEmptyCard('Laster moduler...');
+      categoryGrid.innerHTML = renderEmptyCard('Laster kategorier...');
+      quickLinksList.innerHTML = '<li>Ingen kategorier lastet ennå.</li>';
+      usernameInput.value = '';
+      passwordInput.value = '';
+      authStatus.textContent = 'Du er logget ut.';
+      showBanner('Logget ut', 'Du er logget ut av ModulHub.', 'ok');
+      showLoginView();
+    });
+
+    async function loadModules() {
+      try {
+        const indexResponse = await fetch(MODULE_INDEX_PATH + '?' + Date.now(), {
+          cache: 'no-store',
+          credentials: 'include'
+        });
+
+        if (!indexResponse.ok) {
+          throw new Error('Kunne ikke lese modulregisteret.');
+        }
+
+        const modulePaths = await indexResponse.json();
+
+        if (!Array.isArray(modulePaths)) {
+          throw new Error('Modulregisteret har ugyldig format.');
+        }
+
+        const modules = await Promise.all(
+          modulePaths.map(async (modulePath) => {
+            const response = await fetch(`modules/${modulePath}/module.json`, {
+              cache: 'no-store',
+              credentials: 'include'
+            });
+
+            if (!response.ok) {
+              throw new Error(`Kunne ikke lese module.json for ${modulePath}`);
+            }
+
+            const moduleData = await response.json();
+            return normalizeModule(moduleData, modulePath);
+          })
+        );
+
+        loadedModules = modules.filter(Boolean).filter((module) => module.visible);
+        renderModules(loadedModules);
+      } catch (error) {
+        console.error(error);
+        featuredContainer.innerHTML = renderEmptyCard('Kunne ikke laste modulregister.');
+        categoryGrid.innerHTML = renderEmptyCard('Kunne ikke laste modulregister.');
+        quickLinksList.innerHTML = '<li>Kunne ikke laste kategorier.</li>';
+        setStats(0, 0, 0, 'Feil');
+        showBanner(
+          'Modulregister',
+          'Kunne ikke laste moduler. Sjekk data/modules-index.json og module.json-filer.',
+          'error'
+        );
+      }
+    }
+
+    function normalizeModule(moduleData, modulePath) {
+      const pathParts = String(modulePath).split('/');
+      const fallbackCategory = pathParts[0] || 'ukjent';
+      const fallbackSlug = pathParts[pathParts.length - 1] || 'modul';
+
+      return {
+        id: safeText(moduleData.id, fallbackSlug),
+        title: safeText(moduleData.title || moduleData.name, fallbackSlug),
+        description: safeText(moduleData.description, 'Ingen beskrivelse registrert.'),
+        entry: safeText(moduleData.entry, 'index.html'),
+        category: safeText(moduleData.category, fallbackCategory),
+        status: safeText(moduleData.status, 'Aktiv'),
+        featured: Boolean(moduleData.featured),
+        visible: moduleData.enabled !== false && moduleData.visible !== false,
+        path: modulePath
+      };
+    }
+
+    function renderModules(modules) {
+      const featuredModules = modules.filter((module) => module.featured);
+      const shownFeatured = featuredModules.length ? featuredModules : modules.slice(0, 4);
+
+      featuredContainer.innerHTML = shownFeatured.length
+        ? shownFeatured.map(renderModuleCard).join('')
+        : renderEmptyCard('Ingen moduler tilgjengelig.');
+
+      const grouped = groupByCategory(modules);
+      const categoryNames = Object.keys(grouped).sort(sortText);
+
+      if (!categoryNames.length) {
+        categoryGrid.innerHTML = renderEmptyCard('Ingen kategorier tilgjengelig.');
+        quickLinksList.innerHTML = '<li>Ingen kategorier tilgjengelig.</li>';
+      } else {
+        categoryGrid.innerHTML = categoryNames.map((categoryName) => {
+          const categoryId = createCategoryId(categoryName);
+          const moduleCards = grouped[categoryName].map(renderModuleCard).join('');
+
+          return `
+            <section id="${escapeAttribute(categoryId)}" class="category-panel" aria-labelledby="${escapeAttribute(categoryId)}-title">
+              <h3 id="${escapeAttribute(categoryId)}-title">${escapeHtml(formatCategoryLabel(categoryName))}</h3>
+              <div class="module-list">${moduleCards}</div>
+            </section>
+          `;
+        }).join('');
+
+        quickLinksList.innerHTML = categoryNames.map((categoryName) => {
+          const categoryId = createCategoryId(categoryName);
+          return `<li><a class="simple-link" href="#${escapeAttribute(categoryId)}">${escapeHtml(formatCategoryLabel(categoryName))}</a></li>`;
+        }).join('');
+      }
+
+      setStats(modules.length, shownFeatured.length, categoryNames.length, 'OK');
+    }
+
+    function groupByCategory(modules) {
+      return modules.reduce((acc, module) => {
+        const key = module.category || 'ukjent';
+        if (!acc[key]) acc[key] = [];
+        acc[key].push(module);
+        return acc;
+      }, {});
+    }
+
+    function renderModuleCard(module) {
+      const href = `modules/${module.path}/${module.entry}`;
+      return `
+        <article class="module-card" data-module-title="${escapeAttribute(module.title.toLowerCase())}" data-module-category="${escapeAttribute(module.category.toLowerCase())}">
+          <div class="module-card-header">
+            <div>
+              <h4>${escapeHtml(module.title)}</h4>
+              <div class="module-meta">${escapeHtml(formatCategoryLabel(module.category))}</div>
+            </div>
+            <span class="module-status">${escapeHtml(module.status)}</span>
+          </div>
+          <p>${escapeHtml(module.description)}</p>
+          <div class="module-actions">
+            <a class="btn btn-primary" href="${escapeAttribute(href)}">Åpne modul</a>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderEmptyCard(message) {
+      return `<article class="empty-card">${escapeHtml(message)}</article>`;
     }
 
     searchForm.addEventListener('submit', (event) => {
       event.preventDefault();
-      filterModules(searchInput.value);
+      applyModuleFilter(searchInput.value);
     });
 
     searchInput.addEventListener('input', () => {
-      filterModules(searchInput.value);
+      applyModuleFilter(searchInput.value);
     });
 
-    loadModules();
+    function applyModuleFilter(value) {
+      const term = String(value || '').trim().toLowerCase();
+      const cards = Array.from(document.querySelectorAll('.module-card'));
+
+      let visibleCount = 0;
+
+      cards.forEach((card) => {
+        const haystack = [
+          card.dataset.moduleTitle || '',
+          card.dataset.moduleCategory || '',
+          card.textContent || ''
+        ].join(' ').toLowerCase();
+
+        const match = !term || haystack.includes(term);
+        card.classList.toggle('hidden', !match);
+        if (match) visibleCount += 1;
+      });
+
+      if (term) {
+        showBanner(
+          'Søk',
+          visibleCount ? `Viser ${visibleCount} treff for "${term}".` : `Ingen treff for "${term}".`,
+          visibleCount ? 'ok' : 'warn'
+        );
+      } else {
+        banner.classList.add('hidden');
+      }
+    }
+
+    checkSession();
   </script>
 </body>
 </html>
