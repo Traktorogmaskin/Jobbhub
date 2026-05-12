@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bygg din henger – Traktor og Maskin</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --o:#E8711A;--od:#C95E10;--ol:#FFF8F3;
+  --bl:#1A1A1A;--dk:#2B2B2B;
+  --gr:#F4F4F4;--g2:#E8E8E8;--g3:#D8D8D8;
+  --tx:#333;--mut:#888;
+  --grn:#2D7A2D;--grnb:#F0F9F0;--grnk:#C3E6C3;
+  --bla:#1E5AA8;--blab:#EFF4FB;--blak:#C9D9EC;
+  --gul:#8A6D1B;--gulb:#FBF6E5;--gulk:#E8DCA1;
+}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#fff;color:var(--tx);}
+a{text-decoration:none;}
+
+/* === HEADER === */
+header{background:var(--bl);display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:64px;position:sticky;top:0;z-index:100;border-bottom:3px solid var(--o);}
+.logo{display:flex;align-items:center;gap:10px;cursor:pointer;}
+.logo-icon{width:36px;height:36px;background:var(--o);border-radius:6px;display:grid;place-items:center;}
+.logo-text{color:#fff;font-size:17px;font-weight:700;}
+.logo-text em{color:var(--o);font-style:normal;}
+nav{display:flex;gap:0;}
+nav a{color:#bbb;font-size:13px;padding:0 16px;font-weight:500;transition:color .2s;}
+nav a:hover,nav a.act{color:var(--o);}
+.hcta{background:var(--o);color:#fff;padding:9px 20px;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:background .2s;}
+.hcta:hover{background:var(--od);}
+
+/* === HERO === */
+.hero{background:linear-gradient(135deg,#111 0%,#232323 100%);padding:54px 40px 40px;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(232,113,26,.2) 0%,transparent 55%);pointer-events:none;}
+.steps{display:flex;justify-content:center;margin-bottom:26px;position:relative;z-index:1;}
+.st{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);padding:9px 18px;font-size:13px;color:#999;cursor:pointer;transition:all .2s;user-select:none;}
+.st:first-child{border-radius:7px 0 0 7px;}
+.st:last-child{border-radius:0 7px 7px 0;}
+.st.act{background:var(--o);border-color:var(--o);color:#fff;}
+.st.done{background:rgba(232,113,26,.18);border-color:var(--o);color:var(--o);}
+.sn{width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.14);display:grid;place-items:center;font-size:11px;font-weight:700;}
+.st.act .sn{background:rgba(255,255,255,.28);}
+.hero h1{color:#fff;font-size:38px;font-weight:800;margin-bottom:10px;position:relative;z-index:1;letter-spacing:-.5px;}
+.hero h1 em{color:var(--o);font-style:normal;}
+.hero p{color:#bbb;font-size:15px;position:relative;z-index:1;max-width:480px;margin:0 auto 20px;}
+.badges{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;position:relative;z-index:1;}
+.badge{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);color:#ccc;padding:5px 13px;border-radius:20px;font-size:12px;}
+
+/* === LAYOUT === */
+.layout{display:grid;grid-template-columns:1fr 360px;}
+.main{padding:30px 38px;}
+.panel{background:var(--gr);border-left:1px solid var(--g2);padding:24px;position:sticky;top:67px;align-self:start;max-height:calc(100vh - 80px);overflow-y:auto;}
+.sec{margin-bottom:38px;}
+.stitle{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.1px;color:var(--o);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.stitle::after{content:'';flex:1;height:1px;background:var(--g2);}
+h2.ch{font-size:20px;font-weight:700;margin-bottom:5px;color:var(--bl);}
+.csub{color:#777;font-size:13px;margin-bottom:18px;}
+
+/* === MODELLKORT === */
+.mgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.mc{border:2px solid var(--g2);border-radius:10px;padding:14px 12px 12px;cursor:pointer;background:#fff;position:relative;transition:all .2s;}
+.mc:hover{border-color:#f5a060;transform:translateY(-2px);box-shadow:0 4px 14px rgba(232,113,26,.13);}
+.mc.sel{border-color:var(--o);background:var(--ol);}
+.mck{display:none;position:absolute;top:9px;right:9px;color:#fff;background:var(--o);width:21px;height:21px;border-radius:50%;font-size:12px;font-weight:700;place-items:center;}
+.mc.sel .mck{display:grid;}
+.mimg{width:100%;height:68px;background:var(--gr);border-radius:6px;margin-bottom:10px;display:grid;place-items:center;}
+.mn{font-weight:700;font-size:13px;color:var(--bl);margin-bottom:3px;}
+.mcap{font-size:11px;color:#888;margin-bottom:6px;}
+.mpr{font-size:14px;font-weight:700;color:var(--o);}
+.mpr small{font-size:11px;color:#aaa;font-weight:400;display:block;}
+
+/* === SEKSJONSBANNER (skille mellom fastmontert/tilbehør) === */
+.sec-banner{display:flex;align-items:flex-start;gap:14px;padding:14px 16px;border-radius:9px;margin-bottom:16px;border:1px solid;}
+.sec-banner.fast{background:var(--blab);border-color:var(--blak);}
+.sec-banner.tilb{background:var(--grnb);border-color:var(--grnk);}
+.sec-banner-icon{width:38px;height:38px;border-radius:8px;display:grid;place-items:center;flex-shrink:0;font-size:18px;}
+.sec-banner.fast .sec-banner-icon{background:#fff;color:var(--bla);border:1px solid var(--blak);}
+.sec-banner.tilb .sec-banner-icon{background:#fff;color:var(--grn);border:1px solid var(--grnk);}
+.sec-banner-tx{flex:1;}
+.sec-banner-h{font-size:14px;font-weight:700;color:var(--bl);margin-bottom:2px;}
+.sec-banner-p{font-size:12px;color:#555;line-height:1.45;}
+.sec-banner-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;padding:3px 8px;border-radius:4px;display:inline-block;margin-bottom:6px;}
+.sec-banner.fast .sec-banner-tag{background:var(--bla);color:#fff;}
+.sec-banner.tilb .sec-banner-tag{background:var(--grn);color:#fff;}
+
+/* === FASTMONTERT — radio-grupper === */
+.fast-block{background:#fff;border:1px solid var(--g2);border-left:3px solid var(--bla);border-radius:7px;padding:16px 18px;margin-bottom:10px;}
+.fast-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:11px;}
+.fast-h-tx{font-size:13px;font-weight:700;color:var(--bl);}
+.fast-h-tx .req{color:var(--o);margin-left:5px;}
+.fast-h-hint{font-size:11px;color:var(--mut);}
+.fast-opts{display:flex;flex-direction:column;gap:6px;}
+.fopt{display:flex;align-items:center;gap:11px;padding:9px 12px;border:1.5px solid var(--g2);border-radius:6px;cursor:pointer;background:#fff;transition:all .15s;}
+.fopt:hover{border-color:#a8c1e0;background:#fafcfe;}
+.fopt.sel{border-color:var(--bla);background:var(--blab);}
+.fopt-r{width:16px;height:16px;border-radius:50%;border:2px solid #ccc;flex-shrink:0;position:relative;transition:all .15s;}
+.fopt.sel .fopt-r{border-color:var(--bla);}
+.fopt.sel .fopt-r::after{content:'';position:absolute;inset:2px;background:var(--bla);border-radius:50%;}
+.fopt-tx{flex:1;}
+.fopt-n{font-size:13px;font-weight:600;color:var(--bl);}
+.fopt-s{font-size:11px;color:#888;margin-top:1px;}
+.fopt-p{font-size:12px;font-weight:700;color:var(--bla);white-space:nowrap;}
+.fopt-p.inc{color:var(--grn);}
+.fopt .vn{display:inline-block;background:var(--gr);border:1px solid var(--g2);border-radius:3px;padding:1px 6px;font-size:10px;color:#888;font-family:monospace;margin-left:6px;}
+
+/* === TILBEHØR — kort med lagerstatus === */
+.tilb-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.tcard{background:#fff;border:1.5px solid var(--g2);border-left:3px solid var(--grn);border-radius:8px;padding:12px 14px;cursor:pointer;transition:all .15s;position:relative;}
+.tcard:hover{border-color:#9bcc9b;background:#fafffa;}
+.tcard.sel{border-color:var(--grn);background:var(--grnb);}
+.tcard-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px;}
+.tcard-n{font-size:13px;font-weight:700;color:var(--bl);line-height:1.3;}
+.tcard-n .vn{display:inline-block;background:var(--gr);border:1px solid var(--g2);border-radius:3px;padding:1px 6px;font-size:10px;color:#888;font-family:monospace;margin-left:4px;font-weight:400;}
+.tcard-s{font-size:11px;color:#888;line-height:1.4;margin-bottom:8px;}
+.tcard-bot{display:flex;justify-content:space-between;align-items:center;gap:8px;}
+.tcard-p{font-size:13px;font-weight:700;color:var(--grn);}
+.qtybox{display:flex;align-items:center;border:1.5px solid var(--g2);border-radius:5px;background:#fff;overflow:hidden;}
+.qtybtn{width:24px;height:26px;background:#fff;border:none;cursor:pointer;font-size:14px;font-weight:700;color:var(--bl);transition:background .15s;}
+.qtybtn:hover{background:var(--gr);}
+.qtybtn:disabled{color:#ccc;cursor:not-allowed;}
+.qtyval{width:30px;height:26px;text-align:center;font-size:13px;font-weight:700;border:none;border-left:1px solid var(--g2);border-right:1px solid var(--g2);background:#fff;color:var(--bl);-moz-appearance:textfield;}
+.qtyval::-webkit-outer-spin-button,.qtyval::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+.tcard.sel .qtybox{border-color:var(--grn);}
+
+/* lagerstatus */
+.lager{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:600;padding:2px 7px;border-radius:11px;white-space:nowrap;}
+.lager-dot{width:6px;height:6px;border-radius:50%;}
+.lager.ok{background:var(--grnb);color:var(--grn);border:1px solid var(--grnk);}
+.lager.ok .lager-dot{background:var(--grn);}
+.lager.lav{background:var(--gulb);color:var(--gul);border:1px solid var(--gulk);}
+.lager.lav .lager-dot{background:#D4A82A;}
+.lager.tom{background:#FBEEEE;color:#A82828;border:1px solid #ECC9C9;}
+.lager.tom .lager-dot{background:#C94545;}
+
+/* === SPECS === */
+.spec{width:100%;border-collapse:collapse;font-size:13px;}
+.spec tr{border-bottom:1px solid var(--g2);}
+.spec td{padding:8px 5px;}
+.spec td:first-child{color:#888;width:46%;}
+.spec td:last-child{font-weight:600;color:var(--bl);}
+.vn{display:inline-block;background:var(--gr);border:1px solid var(--g2);border-radius:3px;padding:1px 6px;font-size:11px;color:#888;font-family:monospace;margin-left:4px;}
+
+/* === PANEL === */
+.ptitle{font-size:16px;font-weight:700;color:var(--bl);margin-bottom:14px;border-bottom:2px solid var(--o);padding-bottom:8px;}
+.pmodel{background:var(--dk);border-radius:7px;padding:13px;margin-bottom:13px;}
+.pmn{font-size:14px;font-weight:700;color:var(--o);margin-bottom:2px;}
+.pms{font-size:11px;color:#aaa;}
+.pgroup-h{font-size:10px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.8px;margin:10px 0 4px;padding-top:8px;border-top:1px solid var(--g2);}
+.pgroup-h:first-of-type{border-top:none;padding-top:0;margin-top:0;}
+.pgroup-h.fast{color:var(--bla);}
+.pgroup-h.tilb{color:var(--grn);}
+.sl{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--g2);font-size:12px;gap:8px;}
+.sl span:first-child{color:#555;flex:1;}
+.sl span:last-child{font-weight:600;white-space:nowrap;}
+.sl.add span:last-child{color:var(--o);}
+.sl .qbadge{display:inline-block;background:var(--g2);color:#555;font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;margin-left:5px;}
+.ptot{background:var(--o);border-radius:7px;padding:13px;margin-top:12px;display:flex;justify-content:space-between;align-items:center;}
+.ptl{color:#fff;font-size:13px;font-weight:600;}
+.ptp{color:#fff;font-size:20px;font-weight:800;}
+.ptm{color:rgba(255,255,255,.85);font-size:11px;}
+.bp{display:block;width:100%;background:var(--bl);color:#fff;padding:12px;border-radius:7px;border:none;font-size:13px;font-weight:700;cursor:pointer;text-align:center;margin-top:10px;transition:background .2s;}
+.bp:hover{background:#333;}
+.bs{display:block;width:100%;background:#fff;color:var(--bl);padding:10px;border-radius:7px;border:2px solid var(--g2);font-size:13px;font-weight:600;cursor:pointer;text-align:center;margin-top:7px;transition:all .2s;}
+.bs:hover{border-color:var(--o);color:var(--o);}
+.apib{display:flex;align-items:center;gap:6px;background:#f0f9f0;border:1px solid #c3e6c3;border-radius:5px;padding:7px 11px;margin-top:10px;font-size:12px;color:#2d7a2d;}
+.apid{width:8px;height:8px;background:#4CAF50;border-radius:50%;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+
+/* === FOOTER NAV === */
+.fnav{padding:16px 38px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--g2);background:#fff;position:sticky;bottom:0;z-index:50;box-shadow:0 -2px 12px rgba(0,0,0,.06);}
+.bbk{background:#fff;border:2px solid var(--g2);color:var(--tx);padding:10px 22px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;}
+.bbk:hover{border-color:var(--o);color:var(--o);}
+.bnt{background:var(--o);color:#fff;padding:10px 26px;border-radius:7px;font-size:14px;font-weight:700;border:none;cursor:pointer;transition:background .2s;}
+.bnt:hover{background:var(--od);}
+.pt{font-size:12px;color:#888;}
+
+.notif{position:fixed;bottom:80px;right:24px;background:var(--bl);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;z-index:999;opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none;}
+.notif.show{opacity:1;transform:translateY(0);}
+</style>
+</head>
+<body>
+<div class="notif" id="notif"></div>
+
+<header>
+  <div class="logo" onclick="location.reload()">
+    <div class="logo-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M3 17h2l1-4h12l1 4h2v-7l-3-6H6L3 10v7zm5-13h8l2 4H6l2-4zm-2 9h12v2H6v-2z"/></svg></div>
+    <div class="logo-text">Traktor <em>&amp;</em> Maskin</div>
+  </div>
+  <nav>
+    <a href="#">Produkter</a>
+    <a href="#" class="act">Konfigurér</a>
+    <a href="#">Om Dølen</a>
+    <a href="#">Kontakt</a>
+  </nav>
+  <button class="hcta" onclick="notify('Ta kontakt på post@traktorogmaskin.no')">Be om tilbud</button>
+</header>
+
+<div class="hero">
+  <div class="steps">
+    <div class="st done"><span class="sn">✓</span>&nbsp;Velg modell</div>
+    <div class="st act" id="st2"><span class="sn">2</span>&nbsp;Tilvalg</div>
+    <div class="st" id="st3"><span class="sn">3</span>&nbsp;Spesifikasjoner</div>
+    <div class="st" id="st4"><span class="sn">4</span>&nbsp;Sammendrag</div>
+  </div>
+  <h1>Bygg din <em>Dølen</em>-henger</h1>
+  <p>Konfigurér steg for steg. Priser og varenummer synkroniseres mot Quick.</p>
+  <div class="badges">
+    <div class="badge">⭐ Norsk kvalitet</div>
+    <div class="badge">✅ Eneleverandør Dølen</div>
+    <div class="badge">🔗 Quick API-koblet</div>
+    <div class="badge">📦 Fra lager</div>
+  </div>
+</div>
+
+<div class="layout">
+<div class="main">
+
+  <!-- STEG 1 — MODELL -->
+  <div class="sec">
+    <div class="stitle">Steg 1 — Velg hengermodell</div>
+    <h2 class="ch">Hvilken Dølen-henger passer deg?</h2>
+    <p class="csub">Alle modeller tilgjengelig fra lager. Priser eks. mva.</p>
+    <div class="mgrid" id="modeller">
+      <div class="mc sel" data-id="DLD9" data-name="DLD9 Lettdumper" data-cap="9T · 1-akslet" data-base="199000" onclick="velgModell(this)">
+        <div class="mck">✓</div>
+        <div class="mimg"><svg width="62" height="34" viewBox="0 0 80 40" fill="#bbb"><rect x="5" y="20" width="60" height="12" rx="2"/><rect x="0" y="15" width="20" height="8" rx="2"/><circle cx="18" cy="34" r="5" fill="#aaa"/><circle cx="52" cy="34" r="5" fill="#aaa"/><rect x="62" y="18" width="14" height="10" rx="2"/></svg></div>
+        <div class="mn">DLD9 Lettdumper</div><div class="mcap">9 tonn · 1-akslet</div>
+        <div class="mpr">199 000,–<small>inkl. standard utstyr</small></div>
+      </div>
+      <div class="mc" data-id="DH6" data-name="DH6 Hjulgraverdumper" data-cap="6T · 2-akslet" data-base="159000" onclick="velgModell(this)">
+        <div class="mck">✓</div>
+        <div class="mimg"><svg width="62" height="34" viewBox="0 0 80 40" fill="#bbb"><rect x="5" y="16" width="65" height="15" rx="2"/><rect x="0" y="12" width="22" height="10" rx="2"/><circle cx="18" cy="34" r="5" fill="#aaa"/><circle cx="42" cy="34" r="5" fill="#aaa"/><circle cx="60" cy="34" r="5" fill="#aaa"/></svg></div>
+        <div class="mn">DH6 Hjulgraverdumper</div><div class="mcap">6 tonn · 2-akslet</div>
+        <div class="mpr">159 000,–<small>inkl. standard utstyr</small></div>
+      </div>
+      <div class="mc" data-id="DH8" data-name="DH8 Hjulgraverdumper" data-cap="8T · 2-akslet" data-base="209000" onclick="velgModell(this)">
+        <div class="mck">✓</div>
+        <div class="mimg"><svg width="62" height="34" viewBox="0 0 80 40" fill="#bbb"><rect x="5" y="16" width="65" height="15" rx="2"/><rect x="0" y="12" width="22" height="10" rx="2"/><circle cx="20" cy="34" r="5" fill="#aaa"/><circle cx="50" cy="34" r="5" fill="#aaa"/></svg></div>
+        <div class="mn">DH8 Hjulgraverdumper</div><div class="mcap">8 tonn · 2-akslet</div>
+        <div class="mpr">209 000,–<small>inkl. standard utstyr</small></div>
+      </div>
+      <div class="mc" data-id="ALL" data-name="Allroundhenger" data-cap="12T · 2-akslet" data-base="249000" onclick="velgModell(this)">
+        <div class="mck">✓</div>
+        <div class="mimg"><svg width="62" height="34" viewBox="0 0 80 40" fill="#bbb"><rect x="5" y="18" width="65" height="12" rx="2"/><circle cx="18" cy="33" r="5" fill="#aaa"/><circle cx="52" cy="33" r="5" fill="#aaa"/><rect x="60" y="10" width="15" height="20" rx="2"/></svg></div>
+        <div class="mn">Allroundhenger</div><div class="mcap">12 tonn · 2-akslet</div>
+        <div class="mpr">249 000,–<small>inkl. standard utstyr</small></div>
+      </div>
+      <div class="mc" data-id="GD" data-name="Gårdsdumper 10T" data-cap="10T · 2-akslet" data-base="229000" onclick="velgModell(this)">
+        <div class="mck">✓</div>
+        <div class="mimg"><svg width="62" height="34" viewBox="0 0 80 40" fill="#bbb"><rect x="5" y="14" width="65" height="18" rx="2"/><circle cx="20" cy="34" r="5" fill="#aaa"/><circle cx="40" cy="34" r="5" fill="#aaa"/><circle cx="60" cy="34" r="5" fill="#aaa"/></svg></div>
+        <div class="mn">Gårdsdumper 10T</div><div class="mcap">10 tonn · 2-akslet</div>
+        <div class="mpr">229 000,–<small>inkl. standard utstyr</small></div>
+      </div>
+      <div class="mc" data-id="RB" data-name="Rundballehenger" data-cap="20 baller · 2-akslet" data-base="189000" onclick="velgModell(this)">
+        <div class="mck">✓</div>
+        <div class="mimg"><svg width="62" height="34" viewBox="0 0 80 40" fill="#bbb"><ellipse cx="40" cy="22" rx="28" ry="12"/><circle cx="18" cy="34" r="5" fill="#aaa"/><circle cx="52" cy="34" r="5" fill="#aaa"/></svg></div>
+        <div class="mn">Rundballehenger</div><div class="mcap">20 baller · 2-akslet</div>
+        <div class="mpr">189 000,–<small>inkl. standard utstyr</small></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEG 2A — FASTMONTERT EKSTRAUTSTYR -->
+  <div class="sec">
+    <div class="stitle">Steg 2 — Bygg hengeren din</div>
+    <h2 class="ch" id="tilvalg-tittel">Tilpass DLD9 Lettdumper</h2>
+    <p class="csub">Først velger du hva som skal være fastmontert på selve hengeren. Deretter legger du til løse tilbehørsvarer som leveres med.</p>
+
+    <div class="sec-banner fast">
+      <div class="sec-banner-icon">🔧</div>
+      <div class="sec-banner-tx">
+        <span class="sec-banner-tag">A · Fastmontert</span>
+        <div class="sec-banner-h">Fastmontert ekstrautstyr</div>
+        <div class="sec-banner-p">Velg én løsning per gruppe. Dette bygges inn i hengeren på fabrikken og kan ikke endres senere uten verksted. Påvirker varenummer og produksjonstid.</div>
+      </div>
+    </div>
+
+    <!-- KASSE -->
+    <div class="fast-block">
+      <div class="fast-h">
+        <div class="fast-h-tx">Lasteplan / kasse<span class="req">*</span></div>
+        <div class="fast-h-hint">Velg én</div>
+      </div>
+      <div class="fast-opts" data-group="kasse">
+        <div class="fopt sel" data-id="STD" data-name="Standard stålkasse" data-pris="0" onclick="velgFast(this,'kasse')">
+          <div class="fopt-r"></div>
+          <div class="fopt-tx"><div class="fopt-n">Standard stålkasse <span class="vn">-STD</span></div><div class="fopt-s">3 mm herdet stål · 650 mm høyde</div></div>
+          <div class="fopt-p inc">Inkludert</div>
+        </div>
+        <div class="fopt" data-id="HS40" data-name="Høysidet kasse +40 cm" data-pris="8500" onclick="velgFast(this,'kasse')">
+          <div class="fopt-r"></div>
+          <div class="fopt-tx"><div class="fopt-n">Høysidet kasse +40 cm <span class="vn">-HS40</span></div><div class="fopt-s">For lettere bulk · 1 050 mm høyde</div></div>
+          <div class="fopt-p">+ 8 500,–</div>
+        </div>
+        <div class="fopt" data-id="HX" data-name="Hardox 450-kasse" data-pris="14900" onclick="velgFast(this,'kasse')">
+          <div class="fopt-r"></div>
+          <div class="fopt-tx"><div class="fopt-n">Hardox 450-kasse <span class="vn">-HX</span></div><div class="fopt-s">Ekstra slitesterk · for stein og pukk</div></div>
+          <div class="fopt-p">+ 14 900,–</div>
+        </div>
+        <div class="fopt" data-id="KG" data-name="Korn-/griskasse" data-pris="18200" onclick="velgFast(this,'kasse')">
+          <div class="fopt-r"></div>
+          <div class="fopt-tx"><div class="fopt-n">Korn-/griskasse <span class="vn">-KG</span></div><div class="fopt-s">Med losselem · tett konstruksjon</div></div>
+          <div class="fopt-p">+ 18 200,–</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BREMSER -->
+    <div class="fast-block">
+      <div class="fast-h">
+        <div class="fast-h-tx">Bremsesystem<span class="req">*</span></div>
+        <div class="fast-h-hint">Velg én</div>
+      </div>
+      <div class="fast-opts" data-group="brems">
+        <div class="fopt sel" data-id="HYD" data-name="Hydrauliske bremser" data-pris="0" onclick="velgFast(this,'brems')">
+          <div class="fopt-r"></div>
+          <div class="fopt-tx"><div class="fopt-n">Hydrauliske bremser <span class="vn">-BHYD</span></div><div class="fopt-s">Standard på alle modeller</div></div>
+          <div class="fopt-p inc">Inkludert</div>
+        </div>
+        <div class="fopt" data-id="LUF" data-name="Luftbremser (EU)" data-pris="12500" onclick="velgFast(this,'brems')">
+          <div class="fopt-r"></div>
+          <div class="fopt-tx"><div class="fopt-n">Luftbremser EU-godkjent <span class="vn">-BLUF</span></div><div class="fopt-s">Påkrevd ved 40 km/t veikjøring</div></div>
+          <div class="fopt-p">+ 12 500,–</div>
+        </div>
+        <div class="fopt" data-id="ABS" data-name="Luft + ABS" data-pris="22800" onclick="velgFast(this,'brems')">
+          <div class="fopt-r"></div>
+          <div class="fopt-tx"><div class="fopt-n">Luftbremser med ABS <span class="vn">-BABS</span></div><div class="fopt-s">For tunge transporter og høyhastighet</div></div>
+          <div class="fopt-p">+ 22 800,–</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DEKK -->
+    <div class="fast-block">
+      <div class="fast-h">
+        <div class="fast-h-tx">Dekkdimensjon<span class="req">*</span></div>
+        <div class="fast-h-hint">Velg én</div>
+      </div>
+      <div class="fast-opts" data-group="dekk">
+        <div class="fopt sel" data-id="D22" data-name="400/55-22.5 standard" data-pris="0" onclick="velgFast(this,'dekk')">
+          <div class="fopt-r"></div>
+          <div class="fopt-tx"><div class="fopt-n">400/55-22.5 veidekk <span class="vn">-D22V</span></div><div class="fopt-s">Standard veimønster</div></div>
+          <div class="fopt-p inc">Inkludert</div>
+        </div>
+        <div class="fopt" data-id="D22T" data-name="400/55-22.5 terreng" data-pris="4200" onclick="velgFast(this,'dekk')">
+          <div class="fopt-r"></div>
+          <div class="fopt-tx"><div class="fopt-n">400/55-22.5 terrengmønster <span class="vn">-D22T</span></div><div class="fopt-s">Bedre grep i jord og leire</div></div>
+          <div class="fopt-p">+ 4 200,–</div>
+        </div>
+        <div class="fopt" data-id="D26" data-name="500/50-17 flotasjon" data-pris="11400" onclick="velgFast(this,'dekk')">
+          <div class="fopt-r"></div>
+          <div class="fopt-tx"><div class="fopt-n">500/50-17 flotasjon <span class="vn">-D17F</span></div><div class="fopt-s">Lavere marktrykk · for skog og jord</div></div>
+          <div class="fopt-p">+ 11 400,–</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AKSLING -->
+    <div class="fast-block">
+      <div class="fast-h">
+        <div class="fast-h-tx">Akseloppsett<span class="req">*</span></div>
+        <div class="fast-h-hint">Velg én</div>
+      </div>
+      <div class="fast-opts" data-group="aksel">
+        <div class="fopt sel" data-id="A1" data-name="1-akslet" data-pris="0" onclick="velgFast(this,'aksel')">
+          <div class="fopt-r"></div>
+          <div class="fopt-tx"><div class="fopt-n">1-akslet <span class="vn">-A1</span></div><div class="fopt-s">Standard på DLD9</div></div>
+          <div class="fopt-p inc">Inkludert</div>
+        </div>
+        <div class="fopt" data-id="A2T" data-name="2-akslet tandem" data-pris="22000" onclick="velgFast(this,'aksel')">
+          <div class="fopt-r"></div>
+          <div class="fopt-tx"><div class="fopt-n">2-akslet tandem <span class="vn">-A2T</span></div><div class="fopt-s">Bedre svingradius · høyere lastkapasitet</div></div>
+          <div class="fopt-p">+ 22 000,–</div>
+        </div>
+        <div class="fopt" data-id="A2L" data-name="2-akslet med luftgummi" data-pris="34500" onclick="velgFast(this,'aksel')">
+          <div class="fopt-r"></div>
+          <div class="fopt-tx"><div class="fopt-n">2-akslet med luftgummi <span class="vn">-A2L</span></div><div class="fopt-s">Skånsom transport · justerbar høyde</div></div>
+          <div class="fopt-p">+ 34 500,–</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TIPPESYSTEM -->
+    <div class="fast-block">
+      <div class="fast-h">
+        <div class="fast-h-tx">Tippesystem<span class="req">*</span></div>
+        <div class="fast-h-hint">Velg én</div>
+      </div>
+      <div class="fast-opts" data-group="tipp">
+        <div class="fopt sel" data-id="TB" data-name="Baktipp" data-pris="0" onclick="velgFast(this,'tipp')">
+          <div class="fopt-r"></div>
+          <div class="fopt-tx"><div class="fopt-n">Baktipp standard <span class="vn">-TB</span></div><div class="fopt-s">Enkeltvirkende hydraulikk</div></div>
+          <div class="fopt-p inc">Inkludert</div>
+        </div>
+        <div class="fopt" data-id="T3" data-name="3-veis tipping" data-pris="11500" onclick="velgFast(this,'tipp')">
+          <div class="fopt-r"></div>
+          <div class="fopt-tx"><div class="fopt-n">3-veis tipping <span class="vn">-T3</span></div><div class="fopt-s">Tipp til side og bak · dobbeltvirkende</div></div>
+          <div class="fopt-p">+ 11 500,–</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INTEGRERT TILLEGG (single checkboxes for fastmontert) -->
+    <div class="fast-block">
+      <div class="fast-h">
+        <div class="fast-h-tx">Integrerte tilvalg</div>
+        <div class="fast-h-hint">Velg fritt</div>
+      </div>
+      <div class="fast-opts" data-group="intgr">
+        <div class="fopt sel" data-id="HBL" data-name="Hydraulisk bakluke" data-pris="6200" data-multi="1" onclick="toggleFastSingle(this)">
+          <div class="fopt-r" style="border-radius:4px"></div>
+          <div class="fopt-tx"><div class="fopt-n">Hydraulisk bakluke <span class="vn">-HBL</span></div><div class="fopt-s">Fjernstyrt via traktorens hydraulikk</div></div>
+          <div class="fopt-p">+ 6 200,–</div>
+        </div>
+        <div class="fopt sel" data-id="LED" data-name="Belysningspakke LED" data-pris="3400" data-multi="1" onclick="toggleFastSingle(this)">
+          <div class="fopt-r" style="border-radius:4px"></div>
+          <div class="fopt-tx"><div class="fopt-n">Belysningspakke LED <span class="vn">-LED</span></div><div class="fopt-s">Godkjent for vei · inkl. bremselys</div></div>
+          <div class="fopt-p">+ 3 400,–</div>
+        </div>
+        <div class="fopt" data-id="FP" data-name="Frontplanke" data-pris="2100" data-multi="1" onclick="toggleFastSingle(this)">
+          <div class="fopt-r" style="border-radius:4px"></div>
+          <div class="fopt-tx"><div class="fopt-n">Frontplanke <span class="vn">-FP</span></div><div class="fopt-s">Kraftig frontplanke i stål · sveiset</div></div>
+          <div class="fopt-p">+ 2 100,–</div>
+        </div>
+        <div class="fopt" data-id="PRE" data-name="Presenningsbøyler m/rull" data-pris="9800" data-multi="1" onclick="toggleFastSingle(this)">
+          <div class="fopt-r" style="border-radius:4px"></div>
+          <div class="fopt-tx"><div class="fopt-n">Presenningsbøyler m/rull <span class="vn">-PRE</span></div><div class="fopt-s">Rullepresenning med aluminiumsbøyler</div></div>
+          <div class="fopt-p">+ 9 800,–</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEG 2B — LØST TILBEHØR (LAGERSTYRT) -->
+  <div class="sec">
+    <div class="sec-banner tilb">
+      <div class="sec-banner-icon">📦</div>
+      <div class="sec-banner-tx">
+        <span class="sec-banner-tag">B · Tilbehør</span>
+        <div class="sec-banner-h">Populært tilbehør — leveres med hengeren</div>
+        <div class="sec-banner-p">Løse varer fra lager. Velg antall etter behov. Lagerstatus oppdateres mot Quick i sanntid. Kan kjøpes når som helst senere — også uten å bestille henger.</div>
+      </div>
+    </div>
+
+    <div class="tilb-grid" id="tilb-grid">
+      <div class="tcard" data-id="GUM" data-name="Gummimatte (1 stk)" data-pris="1150" data-stock="14" onclick="event.target.closest('.qtybox')||leggTilbeh(this)">
+        <div class="tcard-top">
+          <div class="tcard-n">Gummimatte 1×2 m <span class="vn">2300-GUM</span></div>
+          <div class="lager ok"><span class="lager-dot"></span>14 på lager</div>
+        </div>
+        <div class="tcard-s">Beskytter kassebunn mot stein og slag. Anbefalt 4 stk for DLD9.</div>
+        <div class="tcard-bot">
+          <div class="tcard-p">1 150,–<span style="font-size:10px;color:#888;font-weight:400">/stk</span></div>
+          <div class="qtybox" onclick="event.stopPropagation()">
+            <button class="qtybtn" onclick="endreAnt('GUM',-1)">−</button>
+            <input class="qtyval" type="number" min="0" value="0" data-id="GUM" oninput="settAnt('GUM',this.value)">
+            <button class="qtybtn" onclick="endreAnt('GUM',1)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="tcard" data-id="STRO" data-name="Stroppesett 4-pk" data-pris="890" data-stock="22" onclick="event.target.closest('.qtybox')||leggTilbeh(this)">
+        <div class="tcard-top">
+          <div class="tcard-n">Stroppesett 4 m, 4-pakk <span class="vn">5040-STR4</span></div>
+          <div class="lager ok"><span class="lager-dot"></span>22 på lager</div>
+        </div>
+        <div class="tcard-s">Spennbånd 50 mm med ratchet. CE-godkjent for lastsikring.</div>
+        <div class="tcard-bot">
+          <div class="tcard-p">890,–<span style="font-size:10px;color:#888;font-weight:400">/sett</span></div>
+          <div class="qtybox" onclick="event.stopPropagation()">
+            <button class="qtybtn" onclick="endreAnt('STRO',-1)">−</button>
+            <input class="qtyval" type="number" min="0" value="0" data-id="STRO" oninput="settAnt('STRO',this.value)">
+            <button class="qtybtn" onclick="endreAnt('STRO',1)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="tcard" data-id="KIL" data-name="Kileklosser, par" data-pris="320" data-stock="8" onclick="event.target.closest('.qtybox')||leggTilbeh(this)">
+        <div class="tcard-top">
+          <div class="tcard-n">Kileklosser i gummi, par <span class="vn">3010-KIL</span></div>
+          <div class="lager lav"><span class="lager-dot"></span>Få igjen (8)</div>
+        </div>
+        <div class="tcard-s">Lovpålagt ved parkering i helling. Holdere medfølger.</div>
+        <div class="tcard-bot">
+          <div class="tcard-p">320,–<span style="font-size:10px;color:#888;font-weight:400">/par</span></div>
+          <div class="qtybox" onclick="event.stopPropagation()">
+            <button class="qtybtn" onclick="endreAnt('KIL',-1)">−</button>
+            <input class="qtyval" type="number" min="0" value="0" data-id="KIL" oninput="settAnt('KIL',this.value)">
+            <button class="qtybtn" onclick="endreAnt('KIL',1)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="tcard" data-id="STO" data-name="Støttehjul m/sveiv" data-pris="2450" data-stock="6" onclick="event.target.closest('.qtybox')||leggTilbeh(this)">
+        <div class="tcard-top">
+          <div class="tcard-n">Støttehjul m/sveiv 60 mm <span class="vn">4015-STO</span></div>
+          <div class="lager ok"><span class="lager-dot"></span>6 på lager</div>
+        </div>
+        <div class="tcard-s">Fritt monterbart på drag. Letter til-/frakopling alene.</div>
+        <div class="tcard-bot">
+          <div class="tcard-p">2 450,–<span style="font-size:10px;color:#888;font-weight:400">/stk</span></div>
+          <div class="qtybox" onclick="event.stopPropagation()">
+            <button class="qtybtn" onclick="endreAnt('STO',-1)">−</button>
+            <input class="qtyval" type="number" min="0" value="0" data-id="STO" oninput="settAnt('STO',this.value)">
+            <button class="qtybtn" onclick="endreAnt('STO',1)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="tcard" data-id="RES" data-name="Reservehjul m/holder" data-pris="3950" data-stock="3" onclick="event.target.closest('.qtybox')||leggTilbeh(this)">
+        <div class="tcard-top">
+          <div class="tcard-n">Reservehjul m/holder <span class="vn">4220-RES</span></div>
+          <div class="lager lav"><span class="lager-dot"></span>Få igjen (3)</div>
+        </div>
+        <div class="tcard-s">400/55-22.5 reservehjul inkl. holder monterbar under kasse.</div>
+        <div class="tcard-bot">
+          <div class="tcard-p">3 950,–<span style="font-size:10px;color:#888;font-weight:400">/stk</span></div>
+          <div class="qtybox" onclick="event.stopPropagation()">
+            <button class="qtybtn" onclick="endreAnt('RES',-1)">−</button>
+            <input class="qtyval" type="number" min="0" value="0" data-id="RES" oninput="settAnt('RES',this.value)">
+            <button class="qtybtn" onclick="endreAnt('RES',1)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="tcard" data-id="VERK" data-name="Verktøykasse" data-pris="1290" data-stock="0" onclick="event.target.closest('.qtybox')||leggTilbeh(this)">
+        <div class="tcard-top">
+          <div class="tcard-n">Verktøykasse stål 60 cm <span class="vn">7080-VRK</span></div>
+          <div class="lager tom"><span class="lager-dot"></span>Utsolgt</div>
+        </div>
+        <div class="tcard-s">Låsbar verktøykasse for montering på drag. Restordre 3 uker.</div>
+        <div class="tcard-bot">
+          <div class="tcard-p">1 290,–<span style="font-size:10px;color:#888;font-weight:400">/stk</span></div>
+          <div class="qtybox" onclick="event.stopPropagation()">
+            <button class="qtybtn" disabled>−</button>
+            <input class="qtyval" type="number" value="0" disabled>
+            <button class="qtybtn" disabled>+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="tcard" data-id="LAMP" data-name="Arbeidslampe LED" data-pris="780" data-stock="12" onclick="event.target.closest('.qtybox')||leggTilbeh(this)">
+        <div class="tcard-top">
+          <div class="tcard-n">Arbeidslampe LED 36W <span class="vn">6011-LMP</span></div>
+          <div class="lager ok"><span class="lager-dot"></span>12 på lager</div>
+        </div>
+        <div class="tcard-s">12/24 V LED-lampe med magnetfeste. IP67.</div>
+        <div class="tcard-bot">
+          <div class="tcard-p">780,–<span style="font-size:10px;color:#888;font-weight:400">/stk</span></div>
+          <div class="qtybox" onclick="event.stopPropagation()">
+            <button class="qtybtn" onclick="endreAnt('LAMP',-1)">−</button>
+            <input class="qtyval" type="number" min="0" value="0" data-id="LAMP" oninput="settAnt('LAMP',this.value)">
+            <button class="qtybtn" onclick="endreAnt('LAMP',1)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="tcard" data-id="OLIE" data-name="Hydraulikkolje 20L" data-pris="690" data-stock="18" onclick="event.target.closest('.qtybox')||leggTilbeh(this)">
+        <div class="tcard-top">
+          <div class="tcard-n">Hydraulikkolje 20 L <span class="vn">8500-OLI20</span></div>
+          <div class="lager ok"><span class="lager-dot"></span>18 på lager</div>
+        </div>
+        <div class="tcard-s">HVLP-46. Anbefalt for service hver 12. måned.</div>
+        <div class="tcard-bot">
+          <div class="tcard-p">690,–<span style="font-size:10px;color:#888;font-weight:400">/kanne</span></div>
+          <div class="qtybox" onclick="event.stopPropagation()">
+            <button class="qtybtn" onclick="endreAnt('OLIE',-1)">−</button>
+            <input class="qtyval" type="number" min="0" value="0" data-id="OLIE" oninput="settAnt('OLIE',this.value)">
+            <button class="qtybtn" onclick="endreAnt('OLIE',1)">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEG 3 — SPECS -->
+  <div class="sec">
+    <div class="stitle">Steg 3 — Tekniske spesifikasjoner</div>
+    <h2 class="ch" id="spec-tittel">DLD9 Lettdumper — Spesifikasjoner</h2>
+    <p class="csub">Oppdateres dynamisk basert på valgt konfigurasjon.</p>
+    <table class="spec" id="spec-tabell">
+      <tr><td>Modell</td><td id="s-modell">Dølen DLD9</td></tr>
+      <tr><td>Totalvekt (BTH)</td><td id="s-vekt">9 000 kg</td></tr>
+      <tr><td>Nyttevekt</td><td id="s-nytte">~7 200 kg</td></tr>
+      <tr><td>Kasselengde</td><td id="s-lengde">4 400 mm</td></tr>
+      <tr><td>Kassebredde (innvendig)</td><td id="s-bredde">2 150 mm</td></tr>
+      <tr><td>Kassehøyde standard</td><td id="s-hoyde">650 mm</td></tr>
+      <tr><td>Akseloppsett</td><td id="s-aksel">1-akslet</td></tr>
+      <tr><td>Dekkdimensjon</td><td id="s-dekk">400/55-22.5</td></tr>
+      <tr><td>Bremser</td><td id="s-brems">Hydrauliske</td></tr>
+      <tr><td>Tippesystem</td><td id="s-tipp">Baktipp</td></tr>
+      <tr><td>Koblingshøyde</td><td>Justerbar 650–850 mm</td></tr>
+      <tr><td>Maling</td><td>Epoxy + topplakk, RAL 9005</td></tr>
+      <tr><td>Quick varenr.</td><td id="s-varenr"><span class="vn">DLD9-BASE</span></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ============ PANEL ============ -->
+<div class="panel">
+  <div class="ptitle">📋 Din konfigurasjon</div>
+  <div class="pmodel">
+    <div class="pmn" id="pModelNavn">Dølen DLD9 Lettdumper</div>
+    <div class="pms" id="pModelSub">9T · 1-akslet · Standard stålkasse</div>
+  </div>
+
+  <div class="pgroup-h fast">🔧 Fastmontert ekstrautstyr</div>
+  <div id="pFast">
+    <div class="sl"><span>Basismodell DLD9</span><span id="pBase">199 000,–</span></div>
+  </div>
+
+  <div class="pgroup-h tilb">📦 Tilbehør fra lager</div>
+  <div id="pTilb">
+    <div style="padding:6px 0;font-size:12px;color:#aaa;font-style:italic;">Ingen tilbehør valgt ennå</div>
+  </div>
+
+  <div class="ptot">
+    <div>
+      <div class="ptl">Totalpris eks. mva</div>
+      <div class="ptm" id="pMva">261 250,– inkl. 25% mva</div>
+    </div>
+    <div class="ptp" id="pTotal">208 600,–</div>
+  </div>
+  <button class="bp" onclick="sendForespørsel()">🛒 Send forespørsel til Quick</button>
+  <button class="bs" onclick="lagreKonfig()">💾 Lagre konfigurasjon</button>
+  <button class="bs" onclick="notify('PDF-nedlasting ville trigges her via backend')">📄 Last ned PDF-tilbud</button>
+  <div class="apib"><div class="apid"></div>Quick API: tilkoblet · Lager OK</div>
+
+  <div style="margin-top:13px;padding-top:13px;border-top:1px solid var(--g2);">
+    <div style="font-size:11px;color:#aaa;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px;">Varekoblinger (Quick)</div>
+    <div id="pVarenr" style="font-size:11px;color:#888;line-height:2.1;">
+      <span class="vn">DLD9-BASE</span> Basismodell<br>
+      <span class="vn">DLD9-HBL</span> Hydr. bakluke<br>
+      <span class="vn">DLD9-LED</span> LED-belysning
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="fnav">
+  <button class="bbk" onclick="notify('Gå tilbake til produktoversikten')">← Tilbake</button>
+  <span class="pt" id="fnStatus">Steg 2 av 4 &nbsp;·&nbsp; <span id="fnAntall">2</span> tilvalg + <span id="fnTilbAnt">0</span> tilbehør &nbsp;·&nbsp; <span id="fnSum">208 600,–</span> eks. mva</span>
+  <button class="bnt" onclick="nesteSteg()">Neste steg →</button>
+</div>
+
+<script>
+// ============ STATE ============
+var state = {
+  modell: {id:'DLD9', navn:'DLD9 Lettdumper', cap:'9T · 1-akslet', base:199000},
+  fast: {
+    kasse: {id:'STD', navn:'Standard stålkasse', pris:0},
+    brems: {id:'HYD', navn:'Hydrauliske bremser', pris:0},
+    dekk:  {id:'D22', navn:'400/55-22.5 veidekk', pris:0},
+    aksel: {id:'A1',  navn:'1-akslet', pris:0},
+    tipp:  {id:'TB',  navn:'Baktipp standard', pris:0}
+  },
+  intgr: [
+    {id:'HBL',navn:'Hydraulisk bakluke',pris:6200},
+    {id:'LED',navn:'Belysningspakke LED',pris:3400}
+  ],
+  tilb: {}, // {ID: {navn, pris, ant}}
+  steg: 2
+};
+
+var modelSpecs = {
+  DLD9:{modell:'Dølen DLD9',vekt:'9 000 kg',nytte:'~7 200 kg',lengde:'4 400 mm',bredde:'2 150 mm',hoyde:'650 mm',aksel:'1-akslet',dekk:'400/55-22.5'},
+  DH6:{modell:'Dølen DH6',vekt:'6 000 kg',nytte:'~4 800 kg',lengde:'3 800 mm',bredde:'2 000 mm',hoyde:'600 mm',aksel:'2-akslet',dekk:'385/65-22.5'},
+  DH8:{modell:'Dølen DH8',vekt:'8 000 kg',nytte:'~6 200 kg',lengde:'4 200 mm',bredde:'2 100 mm',hoyde:'630 mm',aksel:'2-akslet',dekk:'400/55-22.5'},
+  ALL:{modell:'Dølen Allround',vekt:'12 000 kg',nytte:'~9 800 kg',lengde:'5 200 mm',bredde:'2 200 mm',hoyde:'700 mm',aksel:'2-akslet tandem',dekk:'500/50-17'},
+  GD:{modell:'Dølen Gård 10T',vekt:'10 000 kg',nytte:'~8 000 kg',lengde:'4 800 mm',bredde:'2 150 mm',hoyde:'680 mm',aksel:'2-akslet',dekk:'400/60-15.5'},
+  RB:{modell:'Dølen Rundballe',vekt:'8 500 kg',nytte:'20 baller',lengde:'7 200 mm',bredde:'2 400 mm',hoyde:'–',aksel:'2-akslet',dekk:'500/45-22.5'}
+};
+
+function fmt(n){return n.toLocaleString('nb-NO').replace(/\u00A0/g,' ')+',–';}
+
+// ============ OPPDATER ============
+function oppdater(){
+  var fastSum = 0;
+  Object.keys(state.fast).forEach(function(k){fastSum += state.fast[k].pris;});
+  var intgrSum = state.intgr.reduce(function(a,t){return a+t.pris;},0);
+  var tilbSum = 0, tilbAnt = 0;
+  Object.keys(state.tilb).forEach(function(id){
+    tilbSum += state.tilb[id].pris * state.tilb[id].ant;
+    tilbAnt += state.tilb[id].ant;
+  });
+  var tot = state.modell.base + fastSum + intgrSum + tilbSum;
+
+  document.getElementById('pTotal').textContent = fmt(tot);
+  document.getElementById('pMva').textContent = fmt(Math.round(tot*1.25))+' inkl. 25% mva';
+  document.getElementById('fnSum').textContent = fmt(tot);
+  document.getElementById('fnAntall').textContent = state.intgr.length + Object.keys(state.fast).filter(function(k){return state.fast[k].pris>0;}).length;
+  document.getElementById('fnTilbAnt').textContent = tilbAnt;
+
+  document.getElementById('pModelNavn').textContent = 'Dølen '+state.modell.navn;
+  document.getElementById('pModelSub').textContent = state.modell.cap+' · '+state.fast.kasse.navn;
+  document.getElementById('tilvalg-tittel').textContent = 'Tilpass '+state.modell.navn;
+  document.getElementById('spec-tittel').textContent = state.modell.navn+' — Spesifikasjoner';
+
+  // Specs
+  var sp = modelSpecs[state.modell.id];
+  document.getElementById('s-modell').textContent = sp.modell;
+  document.getElementById('s-vekt').textContent = sp.vekt;
+  document.getElementById('s-nytte').textContent = sp.nytte;
+  document.getElementById('s-lengde').textContent = sp.lengde;
+  document.getElementById('s-bredde').textContent = sp.bredde;
+  document.getElementById('s-hoyde').textContent = sp.hoyde;
+  document.getElementById('s-aksel').textContent = state.fast.aksel.navn;
+  document.getElementById('s-dekk').textContent = state.fast.dekk.navn;
+  document.getElementById('s-brems').textContent = state.fast.brems.navn;
+  document.getElementById('s-tipp').textContent = state.fast.tipp.navn;
+  document.getElementById('s-varenr').innerHTML = '<span class="vn">'+state.modell.id+'-BASE</span>';
+  document.getElementById('pBase').textContent = fmt(state.modell.base);
+
+  // Panel: fastmontert
+  var pf = '<div class="sl"><span>Basismodell '+state.modell.id+'</span><span>'+fmt(state.modell.base)+'</span></div>';
+  Object.keys(state.fast).forEach(function(k){
+    var f = state.fast[k];
+    if(f.pris>0) pf += '<div class="sl add"><span>'+f.navn+'</span><span>+ '+fmt(f.pris)+'</span></div>';
+  });
+  state.intgr.forEach(function(t){
+    pf += '<div class="sl add"><span>'+t.navn+'</span><span>+ '+fmt(t.pris)+'</span></div>';
+  });
+  document.getElementById('pFast').innerHTML = pf;
+
+  // Panel: tilbehør
+  var pt = '';
+  var harTilb = false;
+  Object.keys(state.tilb).forEach(function(id){
+    var t = state.tilb[id];
+    if(t.ant > 0){
+      harTilb = true;
+      pt += '<div class="sl add"><span>'+t.navn+'<span class="qbadge">×'+t.ant+'</span></span><span>+ '+fmt(t.pris*t.ant)+'</span></div>';
+    }
+  });
+  if(!harTilb) pt = '<div style="padding:6px 0;font-size:12px;color:#aaa;font-style:italic;">Ingen tilbehør valgt ennå</div>';
+  document.getElementById('pTilb').innerHTML = pt;
+
+  // Varenummer-liste
+  var vn = '<span class="vn">'+state.modell.id+'-BASE</span> Basismodell<br>';
+  Object.keys(state.fast).forEach(function(k){
+    var f = state.fast[k];
+    if(f.pris>0) vn+='<span class="vn">'+state.modell.id+'-'+f.id+'</span> '+f.navn+'<br>';
+  });
+  state.intgr.forEach(function(t){
+    vn+='<span class="vn">'+state.modell.id+'-'+t.id+'</span> '+t.navn+'<br>';
+  });
+  Object.keys(state.tilb).forEach(function(id){
+    var t = state.tilb[id];
+    if(t.ant>0) vn+='<span class="vn">'+id+' ×'+t.ant+'</span> '+t.navn+'<br>';
+  });
+  document.getElementById('pVarenr').innerHTML = vn;
+}
+
+// ============ MODELL ============
+function velgModell(el){
+  document.querySelectorAll('.mc').forEach(function(e){e.classList.remove('sel');});
+  el.classList.add('sel');
+  state.modell = {id:el.dataset.id,navn:el.dataset.name,cap:el.dataset.cap,base:parseInt(el.dataset.base)};
+  notify('Valgt: '+state.modell.navn);
+  oppdater();
+}
+
+// ============ FASTMONTERT — radio-grupper ============
+function velgFast(el, gruppe){
+  var group = el.parentElement;
+  group.querySelectorAll('.fopt').forEach(function(e){e.classList.remove('sel');});
+  el.classList.add('sel');
+  state.fast[gruppe] = {
+    id: el.dataset.id,
+    navn: el.dataset.name,
+    pris: parseInt(el.dataset.pris)
+  };
+  oppdater();
+}
+
+// ============ FASTMONTERT — single checkbox (integrerte tilvalg) ============
+function toggleFastSingle(el){
+  var id = el.dataset.id;
+  var idx = state.intgr.findIndex(function(t){return t.id===id;});
+  if(idx > -1){
+    state.intgr.splice(idx, 1);
+    el.classList.remove('sel');
+  } else {
+    state.intgr.push({id:id, navn:el.dataset.name, pris:parseInt(el.dataset.pris)});
+    el.classList.add('sel');
+  }
+  oppdater();
+}
+
+// ============ TILBEHØR — lagerstyrt antall ============
+function leggTilbeh(card){
+  var id = card.dataset.id;
+  var inp = card.querySelector('.qtyval');
+  if(inp && !inp.disabled){
+    var ny = parseInt(inp.value || 0) + 1;
+    settAnt(id, ny);
+  }
+}
+function endreAnt(id, delta){
+  var cur = state.tilb[id] ? state.tilb[id].ant : 0;
+  settAnt(id, cur + delta);
+}
+function settAnt(id, val){
+  val = parseInt(val) || 0;
+  if(val < 0) val = 0;
+  var card = document.querySelector('.tcard[data-id="'+id+'"]');
+  var stock = parseInt(card.dataset.stock);
+  if(val > stock) val = stock;
+
+  if(val === 0){
+    delete state.tilb[id];
+    card.classList.remove('sel');
+  } else {
+    state.tilb[id] = {
+      navn: card.dataset.name,
+      pris: parseInt(card.dataset.pris),
+      ant: val
+    };
+    card.classList.add('sel');
+  }
+  card.querySelector('.qtyval').value = val;
+  oppdater();
+}
+
+// ============ ØVRIG ============
+function notify(msg){
+  var n=document.getElementById('notif');
+  n.textContent=msg;n.classList.add('show');
+  setTimeout(function(){n.classList.remove('show');},2800);
+}
+function sendForespørsel(){
+  var tilbAnt = 0;
+  Object.keys(state.tilb).forEach(function(id){tilbAnt += state.tilb[id].ant;});
+  notify('Forespørsel sendt! Ref: TM-'+Math.floor(Math.random()*9000+1000)+' · '+tilbAnt+' tilbehørsvarer');
+  document.getElementById('st3').classList.add('done');
+  document.getElementById('st4').classList.add('act');
+}
+function lagreKonfig(){
+  var data=JSON.stringify(state, null, 2);
+  var blob=new Blob([data],{type:'application/json'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='dolen-konfig-'+state.modell.id+'.json';a.click();
+  notify('Konfigurasjon lagret som JSON');
+}
+function nesteSteg(){
+  state.steg=Math.min(state.steg+1,4);
+  document.querySelectorAll('.st').forEach(function(e,i){
+    e.classList.remove('act','done');
+    if(i+1<state.steg)e.classList.add('done');
+    else if(i+1===state.steg)e.classList.add('act');
+  });
+  notify('Steg '+state.steg+' av 4');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+oppdater();
+</script>
+</body></html>
